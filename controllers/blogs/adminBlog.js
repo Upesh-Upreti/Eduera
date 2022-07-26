@@ -2,19 +2,17 @@ const Blog = require("../../models/blog")
 
 const postAddBlog = async (req, res) => {
     //Grabbing data from the form 
-    const { name, designation, imageUrl, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
+    const { title, category, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
 
     const blog = await Blog.create({
-        name: name,
-        designation: designation,
-        orderNumber: orderNumber,
+        title: title,
+        category: category,
         imageUrl: imageUrl,
         imageAlt: imageAlt,
         show: show,
-        facebookLink: facebookLink,
-        instagramLink: instagramLink,
-        twitterLink: twitterLink,
-        linkedinLink: linkedinLink
+        slug: slug,
+        shortDescription: shortDescription,
+        longDescription: longDescription
     })
 
     if (blog) {
@@ -33,11 +31,11 @@ const getAllBlogs = async (req, res) => {
     return res.status(404).json({ "message": "Sorry! we didn't find any blog members." })
 }
 
-const getTeamMemberById = async (req, res) => {
+const getBlogById = async (req, res) => {
 
-    const teamId = req.params.id
+    const blogId = req.params.id
 
-    const blog = await Blog.findOne({ where: { id: teamId } });
+    const blog = await Blog.findOne({ where: { id: blogId } });
     if (blog === null) {
         res.status(404).json({ "message": "Oops! we didn't find the blog Member that you are looking for." })
     } else {
@@ -46,32 +44,30 @@ const getTeamMemberById = async (req, res) => {
 
 }
 
-const editTeamMemberById = async (req, res) => {
+const editBlogById = async (req, res) => {
 
     //Blog member id
-    const teamId = req.params.id
+    const blogId = req.params.id
 
     //Grabbing data from the form 
-    const { name, designation, imageUrl, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
+    const { title, category, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
 
     //finding the blog member in the database
-    const blog = await Blog.findOne({ where: { id: teamId } })
+    const blog = await Blog.findOne({ where: { id: blogId } })
 
     if (blog === null) {
         res.status(404).json({ "message": "Oops! we didn't find the blog member that you are looking for." })
     } else {
         //updating the database
         const update = await blog.update({
-            name: name,
-            designation: designation,
-            orderNumber: orderNumber,
+            title: title,
+            category: category,
             imageUrl: imageUrl,
             imageAlt: imageAlt,
             show: show,
-            facebookLink: facebookLink,
-            instagramLink: instagramLink,
-            twitterLink: twitterLink,
-            linkedinLink: linkedinLink
+            slug: slug,
+            shortDescription: shortDescription,
+            longDescription: longDescription
         })
 
         //saving the updates into the database
@@ -85,11 +81,11 @@ const editTeamMemberById = async (req, res) => {
     }
 }
 
-const deleteTeamMemberById = async (req, res) => {
+const deleteBlogById = async (req, res) => {
 
-    const teamId = req.params.id
+    const blogId = req.params.id
 
-    const deleted = await Blog.destroy({ where: { id: teamId } })
+    const deleted = await Blog.destroy({ where: { id: blogId } })
 
     if (deleted) {
         res.status(202).json({ "message": "Blog member was deleted successfully." })
@@ -99,9 +95,9 @@ const deleteTeamMemberById = async (req, res) => {
 }
 
 module.exports = {
-    postAddTeamMember,
-    getAllTeamMembers,
-    getTeamMemberById,
-    editTeamMemberById,
-    deleteTeamMemberById
+    postAddBlog,
+    getAllBlogs,
+    getBlogById,
+    editBlogById,
+    deleteBlogById
 }

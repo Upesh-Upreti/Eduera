@@ -13,6 +13,9 @@ const userProductRoute = require("./routes/products/userProduct")
 //Team Routes
 const adminTeamRoute = require("./routes/team/adminTeam")
 const userTeamRoute = require("./routes/team/userTeam")
+//Blog Routes
+const adminBlogRoute = require("./routes/blogs/adminBlog")
+const userBlogRoute = require("./routes/blogs/userBlog")
 //Page not found Route
 const errorController = require("./controllers/error")
 
@@ -25,6 +28,9 @@ app.use("/api/v1", userProductRoute)
 //Route to handle the team member requests
 app.use("/api/v1/admin", adminTeamRoute)
 app.use("/api/v1", userTeamRoute)
+//Route to handle the blog requests
+app.use("/api/v1/admin", adminBlogRoute)
+app.use("/api/v1", userBlogRoute)
 
 app.get("/", (req, res) => {
 	res.status(200).send("<h1>Hello World!</h1>")
