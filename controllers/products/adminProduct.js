@@ -25,7 +25,11 @@ const postAddProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
     const products = await Product.findAll()
-    res.status(200).json(products)
+
+    if (products)
+        return res.status(200).json(products)
+
+    return res.status(404).json({ "message": "Sorry! we didn't find any products." })
 }
 
 const getProductById = async (req, res) => {

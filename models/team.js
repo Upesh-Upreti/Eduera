@@ -25,7 +25,7 @@ const Team = sequelize.define("team", {
         allowNull: true
     },
     orderNumber: {
-        type: Sequelize.NUMBER,
+        type: Sequelize.INTEGER,
         allowNull: true
     },
     show: {
@@ -49,7 +49,6 @@ const Team = sequelize.define("team", {
         type: Sequelize.STRING,
         allowNull: true
     }
-
 })
 
 module.exports = Team
