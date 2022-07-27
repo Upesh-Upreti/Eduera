@@ -4,6 +4,10 @@ const postAddTeamMember = async (req, res) => {
     //Grabbing data from the form 
     const { name, designation, imageUrl, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
 
+    //to avoid the error
+    if (name === undefined || designation === undefined || imageUrl === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the name, designation and imageUrl." })
+
     const team = await Team.create({
         name: name,
         designation: designation,
@@ -53,6 +57,10 @@ const editTeamMemberById = async (req, res) => {
 
     //Grabbing data from the form 
     const { name, designation, imageUrl, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
+
+    //to avoid the error
+    if (title === undefined || shortDescription === undefined || longDescription === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the title, short description and long descriptio." })
 
     //finding the team member in the database
     const team = await Team.findOne({ where: { id: teamId } })

@@ -16,6 +16,9 @@ const userTeamRoute = require("./routes/team/userTeam")
 //Blog Routes
 const adminBlogRoute = require("./routes/blogs/adminBlog")
 const userBlogRoute = require("./routes/blogs/userBlog")
+//Blog Routes
+const adminTestimoniesRoute = require("./routes/testimonies/adminTestimonies")
+const userTestimoniesRoute = require("./routes/testimonies/userTestimonies")
 //Page not found Route
 const errorController = require("./controllers/error")
 
@@ -31,6 +34,9 @@ app.use("/api/v1", userTeamRoute)
 //Route to handle the blog requests
 app.use("/api/v1/admin", adminBlogRoute)
 app.use("/api/v1", userBlogRoute)
+//Route to handle the blog requests
+app.use("/api/v1/admin", adminTestimoniesRoute)
+app.use("/api/v1", userTestimoniesRoute)
 
 app.get("/", (req, res) => {
 	res.status(200).send("<h1>Hello World!</h1>")

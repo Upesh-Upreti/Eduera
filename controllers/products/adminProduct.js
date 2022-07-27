@@ -4,6 +4,10 @@ const postAddProduct = async (req, res) => {
     //Grabbing data from the form 
     const { title, category, price, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
 
+    //to avoid the error
+    if (title === undefined || shortDescription === undefined || longDescription === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the title, short description and long descriptio." })
+
     const product = await Product.create({
         title: title,
         category: category,
@@ -54,6 +58,10 @@ const editProductById = async (req, res) => {
 
     //Grabbing data from the form 
     const { title, category, price, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
+
+    //to avoid the error
+    if (title === undefined || shortDescription === undefined || longDescription === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the title, short description and long descriptio." })
 
     //finding the product in the database
     const product = await Product.findOne({ where: { id: productId } })

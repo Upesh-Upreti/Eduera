@@ -3,7 +3,9 @@ const Blog = require("../../models/blog")
 const postAddBlog = async (req, res) => {
     //Grabbing data from the form 
     const { title, category, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
-
+    //to avoid the error
+    if (title === undefined || shortDescription === undefined || longDescription === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the title, short description and long descriptio." })
     const blog = await Blog.create({
         title: title,
         category: category,
@@ -51,6 +53,10 @@ const editBlogById = async (req, res) => {
 
     //Grabbing data from the form 
     const { title, category, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
+
+    //to avoid the error
+    if (title === undefined || shortDescription === undefined || longDescription === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the title, short description and long descriptio." })
 
     //finding the blog member in the database
     const blog = await Blog.findOne({ where: { id: blogId } })
