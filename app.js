@@ -16,9 +16,12 @@ const userTeamRoute = require("./routes/team/userTeam")
 //Blog Routes
 const adminBlogRoute = require("./routes/blogs/adminBlog")
 const userBlogRoute = require("./routes/blogs/userBlog")
-//Blog Routes
+//Tetimony Routes
 const adminTestimoniesRoute = require("./routes/testimonies/adminTestimonies")
 const userTestimoniesRoute = require("./routes/testimonies/userTestimonies")
+//Career Routes
+const adminCareersRoute = require("./routes/careers/adminCareer")
+const userCareersRoute = require("./routes/careers/userCareer")
 //Page not found Route
 const errorController = require("./controllers/error")
 
@@ -34,9 +37,12 @@ app.use("/api/v1", userTeamRoute)
 //Route to handle the blog requests
 app.use("/api/v1/admin", adminBlogRoute)
 app.use("/api/v1", userBlogRoute)
-//Route to handle the blog requests
+//Route to handle the testimony requests
 app.use("/api/v1/admin", adminTestimoniesRoute)
 app.use("/api/v1", userTestimoniesRoute)
+//Route to handle the Career requests
+app.use("/api/v1/admin", adminCareersRoute)
+app.use("/api/v1/", userCareersRoute)
 
 app.get("/", (req, res) => {
 	res.status(200).send("<h1>Hello World!</h1>")
