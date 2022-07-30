@@ -1,54 +1,30 @@
-const Sequelize = require("sequelize")
-const sequelize = require("../util/database")
-
-const Team = sequelize.define("team", {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    name: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    designation: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    imageUrl: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    imageAlt: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    orderNumber: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-    },
-    show: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-        defaultValue: true,
-    },
-    facebookLink: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    instagramLink: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    linkedinLink: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    twitterLink: {
-        type: Sequelize.STRING,
-        allowNull: true
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Team extends Model {
+    static associate(models) {
+      // define association here
     }
-})
-
-module.exports = Team
+  }
+  Team.init({
+    name: DataTypes.STRING,
+    designation: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    imageAlt: DataTypes.STRING,
+    orderNumber: DataTypes.INTEGER,
+    show: DataTypes.BOOLEAN,
+    facebookLink: DataTypes.STRING,
+    instagramLink: DataTypes.STRING,
+    linkedinLink: DataTypes.STRING,
+    twitterLink: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+  }, {
+    sequelize,
+    modelName: 'Team',
+    tableName: "teams"
+  });
+  return Team;
+};

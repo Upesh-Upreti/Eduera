@@ -1,38 +1,24 @@
-const Sequelize = require("sequelize")
-const sequelize = require("../util/database")
-
-const Testimony = sequelize.define("testimony", {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    name: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    designation: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    imageUrl: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    imageAlt: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    show: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-        defaultValue: false,
-    },
-    testimony: {
-        type: Sequelize.TEXT,
-        allowNull: false
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Testimony extends Model {
+    static associate(models) {
+      // define association here
     }
-})
-
-module.exports = Testimony
+  }
+  Testimony.init({
+    name: DataTypes.STRING,
+    designation: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    imageAlt: DataTypes.STRING,
+    show: DataTypes.BOOLEAN,
+    Testimony: DataTypes.TEXT,
+  }, {
+    sequelize,
+    modelName: 'Testimony',
+    tableName: "testimonies"
+  });
+  return Testimony;
+};

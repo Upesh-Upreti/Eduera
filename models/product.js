@@ -1,50 +1,27 @@
-const Sequelize = require("sequelize")
-const sequelize = require("../util/database")
 
-const Product = sequelize.define("product", {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    title: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    category: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    price: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-    },
-    imageUrl: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    imageAlt: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    show: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-        defaultValue: true,
-    },
-    slug: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    shortDescription: {
-        type: Sequelize.TEXT,
-        allowNull: false
-    },
-    longDescription: {
-        type: Sequelize.TEXT,
-        allowNull: false
+'use strict';
+
+const { Model } = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+    class Product extends Model {
+
     }
-})
-
-module.exports = Product
+    Product.init({
+        title: DataTypes.STRING,
+        category: DataTypes.STRING,
+        price: DataTypes.INTEGER,
+        imageUrl: DataTypes.STRING,
+        imageAlt: DataTypes.STRING,
+        show: DataTypes.BOOLEAN,
+        slug: DataTypes.STRING,
+        shortDescription: DataTypes.TEXT,
+        longDescription: DataTypes.TEXT,
+        createdAt: DataTypes.DATE,
+        updatedAt: DataTypes.DATE,
+    }, {
+        sequelize,
+        modelName: 'Product',
+        tableName: 'products'
+    });
+    return Product;
+};

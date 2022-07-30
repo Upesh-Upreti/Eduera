@@ -1,27 +1,31 @@
 const express = require("express")
 const dotenv = require("dotenv")
+const cookieParser = require("cookie-parser")
 
 const app = express()
 
+app.use(cookieParser())
 app.use(express.json())
 dotenv.config()
 
 //Our routes to handle different requests accordingly
 //Product Routes
-const adminProductRoute = require("./routes/products/adminProduct")
 const userProductRoute = require("./routes/products/userProduct")
+const frontendProductRoute = require("./routes/products/frontendProduct")
 //Team Routes
-const adminTeamRoute = require("./routes/team/adminTeam")
 const userTeamRoute = require("./routes/team/userTeam")
+const frontendTeamRoute = require("./routes/team/frontendTeam")
 //Blog Routes
-const adminBlogRoute = require("./routes/blogs/adminBlog")
 const userBlogRoute = require("./routes/blogs/userBlog")
+const frontendBlogRoute = require("./routes/blogs/frontendBlog")
 //Tetimony Routes
-const adminTestimoniesRoute = require("./routes/testimonies/adminTestimonies")
 const userTestimoniesRoute = require("./routes/testimonies/userTestimonies")
+const frontendTestimoniesRoute = require("./routes/testimonies/frontendTestimonies")
 //Career Routes
-const adminCareersRoute = require("./routes/careers/adminCareer")
 const userCareersRoute = require("./routes/careers/userCareer")
+const frontendCareersRoute = require("./routes/careers/frontendCareer")
+//Account Routes
+const accountsRoute = require("./routes/accounts/account")
 //Page not found Route
 const errorController = require("./controllers/error")
 
@@ -29,23 +33,25 @@ const errorController = require("./controllers/error")
 const sequelize = require('./util/database')
 
 //Route to handle the product requests
-app.use("/api/v1/admin", adminProductRoute)
-app.use("/api/v1", userProductRoute)
+app.use("/api/v1/user", userProductRoute)
+app.use("/api/v1", frontendProductRoute)
 //Route to handle the team member requests
-app.use("/api/v1/admin", adminTeamRoute)
-app.use("/api/v1", userTeamRoute)
+app.use("/api/v1/user", userTeamRoute)
+app.use("/api/v1", frontendTeamRoute)
 //Route to handle the blog requests
-app.use("/api/v1/admin", adminBlogRoute)
-app.use("/api/v1", userBlogRoute)
+app.use("/api/v1/user", userBlogRoute)
+app.use("/api/v1", frontendBlogRoute)
 //Route to handle the testimony requests
-app.use("/api/v1/admin", adminTestimoniesRoute)
-app.use("/api/v1", userTestimoniesRoute)
+app.use("/api/v1/user", userTestimoniesRoute)
+app.use("/api/v1", frontendTestimoniesRoute)
 //Route to handle the Career requests
-app.use("/api/v1/admin", adminCareersRoute)
-app.use("/api/v1/", userCareersRoute)
+app.use("/api/v1/user", userCareersRoute)
+app.use("/api/v1/", frontendCareersRoute)
+//Route to handle the account requests
+app.use("/api/v1/user", accountsRoute)
 
 app.get("/", (req, res) => {
-	res.status(200).send("<h1>Hello World!</h1>")
+	res.status(200).json({ "message": "Hello there! this server is up and running" })
 })
 
 //For 404 handling
