@@ -1,11 +1,37 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const cookieParser = require("cookie-parser")
+const multer = require("multer")
 
 const app = express()
 
+//file storage configuration for multer
+const fileStorage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, "public/images")
+	},
+	filename: (req, file, cb) => {
+		cb(null, Date.now() + '-' + file.originalname)
+	}
+})
+
+//file filter for multer 
+const filefilter = (req, file, cb) => {
+	if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg" || file.mimetype === "image/png" || file.mimetype === "image/webp") {
+		cb(null, true)
+	} else {
+		cb(null, false)
+	}
+}
+
+
+//middlewares
+app.use(express.static('public'))
 app.use(cookieParser())
 app.use(express.json())
+app.use(multer({ storage: fileStorage, fileFilter: filefilter }).single("image"))
+
+
 dotenv.config()
 
 //Our routes to handle different requests accordingly

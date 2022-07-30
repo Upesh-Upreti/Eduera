@@ -2,14 +2,14 @@ const { Blog } = require("../../models")
 
 const postAddBlog = async (req, res) => {
     //Grabbing data from the form 
-    const { title, category, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
+    const { title, category, imageAlt, show, slug, shortDescription, longDescription } = req.body
     //to avoid the error
     if (title === undefined || shortDescription === undefined || longDescription === undefined)
         return res.status(401).json({ "message": "Please atleast provide the title, short description and long descriptio." })
     const blog = await Blog.create({
         title: title,
         category: category,
-        imageUrl: imageUrl,
+        imageUrl: req.file.filename,
         imageAlt: imageAlt,
         show: show,
         slug: slug,
@@ -52,7 +52,7 @@ const editBlogById = async (req, res) => {
     const blogId = req.params.id
 
     //Grabbing data from the form 
-    const { title, category, imageUrl, imageAlt, show, slug, shortDescription, longDescription } = req.body
+    const { title, category, imageAlt, show, slug, shortDescription, longDescription } = req.body
 
     //to avoid the error
     if (title === undefined || shortDescription === undefined || longDescription === undefined)
@@ -64,11 +64,25 @@ const editBlogById = async (req, res) => {
     if (blog === null) {
         res.status(404).json({ "message": "Oops! we didn't find the blog member that you are looking for." })
     } else {
+        //to delete the previously existing image, if exists
+        if (blog.imageUrl) {
+
+            const path = "public/images/" + blog.imageUrl
+
+            console.log("Deleting the previously existing image at " + path);
+
+            try {
+                fs.unlinkSync(path)
+                //file removed
+            } catch (err) {
+
+            }
+        }
         //updating the database
         const update = await blog.update({
             title: title,
             category: category,
-            imageUrl: imageUrl,
+            imageUrl: req.file.filename,
             imageAlt: imageAlt,
             show: show,
             slug: slug,
@@ -90,6 +104,23 @@ const editBlogById = async (req, res) => {
 const deleteBlogById = async (req, res) => {
 
     const blogId = req.params.id
+
+    const blog = await Blog.findOne({ where: { id: blogId } })
+
+    //to delete the previously existing image, if exists
+    if (blog.imageUrl) {
+
+        const path = "public/images/" + blog.imageUrl
+
+        console.log("Deleting the previously existing image at " + path);
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+
+        }
+    }
 
     const deleted = await Blog.destroy({ where: { id: blogId } })
 

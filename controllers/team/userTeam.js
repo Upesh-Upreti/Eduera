@@ -1,18 +1,19 @@
 const { Team } = require("../../models")
+const fs = require("fs")
 
 const postAddTeamMember = async (req, res) => {
     //Grabbing data from the form 
-    const { name, designation, imageUrl, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
+    const { name, designation, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
 
     //to avoid the error
-    if (name === undefined || designation === undefined || imageUrl === undefined)
-        return res.status(401).json({ "message": "Please atleast provide the name, designation and imageUrl." })
+    if (name === undefined || designation === undefined || req.file === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the name, designation and image." })
 
     const team = await Team.create({
         name: name,
         designation: designation,
         orderNumber: orderNumber,
-        imageUrl: imageUrl,
+        imageUrl: req.file.filename,
         imageAlt: imageAlt,
         show: show,
         facebookLink: facebookLink,
@@ -56,7 +57,7 @@ const editTeamMemberById = async (req, res) => {
     const teamId = req.params.id
 
     //Grabbing data from the form 
-    const { name, designation, imageUrl, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
+    const { name, designation, imageAlt, show, orderNumber, facebookLink, instagramLink, twitterLink, linkedinLink } = req.body
 
     //to avoid the error
     if (title === undefined || shortDescription === undefined || longDescription === undefined)
@@ -68,12 +69,27 @@ const editTeamMemberById = async (req, res) => {
     if (team === null) {
         res.status(404).json({ "message": "Oops! we didn't find the team member that you are looking for." })
     } else {
+
+        //to delete the previously existing image, if exists
+        if (team.imageUrl) {
+
+            const path = "public/images/" + team.imageUrl
+
+            console.log("Deleting the previously existing image at " + path);
+
+            try {
+                fs.unlinkSync(path)
+                //file removed
+            } catch (err) {
+
+            }
+        }
         //updating the database
         const update = await team.update({
             name: name,
             designation: designation,
             orderNumber: orderNumber,
-            imageUrl: imageUrl,
+            imageUrl: req.file.filename,
             imageAlt: imageAlt,
             show: show,
             facebookLink: facebookLink,
@@ -96,6 +112,23 @@ const editTeamMemberById = async (req, res) => {
 const deleteTeamMemberById = async (req, res) => {
 
     const teamId = req.params.id
+
+    const team = await Team.findOne({ where: { id: teamId } })
+
+    //to delete the previously existing image, if exists
+    if (team.imageUrl) {
+
+        const path = "public/images/" + team.imageUrl
+
+        console.log("Deleting the previously existing image at " + path);
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+
+        }
+    }
 
     const deleted = await Team.destroy({ where: { id: teamId } })
 

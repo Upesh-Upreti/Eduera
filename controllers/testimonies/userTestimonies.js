@@ -1,17 +1,18 @@
 const { Testimony } = require("../../models")
+const fs = require("fs")
 
 const postAddTestimony = async (req, res) => {
     //Grabbing data from the form 
-    const { name, designation, imageUrl, imageAlt, show, testimony } = req.body
+    const { name, designation, imageAlt, show, testimony } = req.body
 
     //to avoid the error
-    if (name === undefined || designation === undefined || imageUrl === undefined || testimony === undefined)
-        return res.status(401).json({ "message": "Please atleast provide the name, designation, imageUrl and testimony." })
+    if (name === undefined || designation === undefined || req.file === undefined || testimony === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the name, designation, image and testimony." })
 
     const testimonial = await Testimony.create({
         name: name,
         designation: designation,
-        imageUrl: imageUrl,
+        imageUrl: req.file.filename,
         imageAlt: imageAlt,
         show: show,
         testimony: testimony
@@ -39,11 +40,11 @@ const editTestimonyById = async (req, res) => {
     const testimonyId = req.params.id
 
     //Grabbing data from the form 
-    const { name, designation, imageUrl, imageAlt, show, testimony } = req.body
+    const { name, designation, imageAlt, show, testimony } = req.body
 
     //to avoid the error
-    if (name === undefined || designation === undefined || imageUrl === undefined || testimony === undefined)
-        return res.status(401).json({ "message": "Please atleast provide the name, designation, imageUrl and testimony." })
+    if (name === undefined || designation === undefined || req.file === undefined || testimony === undefined)
+        return res.status(401).json({ "message": "Please atleast provide the name, designation, image and testimony." })
 
     //finding the testimonial  in the database
     const testimonial = await Testimony.findOne({ where: { id: testimonyId } })
@@ -51,10 +52,24 @@ const editTestimonyById = async (req, res) => {
     if (testimonial === null) {
         res.status(404).json({ "message": "Oops! we didn't find the testimonial  that you are looking for." })
     } else {
+        //to delete the previously existing image, if exists
+        if (testimonial.imageUrl) {
+
+            const path = "public/images/" + testimonial.imageUrl
+
+            console.log("Deleting the previously existing image at " + path);
+
+            try {
+                fs.unlinkSync(path)
+                //file removed
+            } catch (err) {
+                console.error(err)
+            }
+        }
         //updating the database
         const update = await testimonial.update({
             name: name,
-            imageUrl: imageUrl,
+            imageUrl: req.file.filename,
             imageAlt: imageAlt,
             show: show,
             testimony: testimony
@@ -75,7 +90,26 @@ const deleteTestimonyById = async (req, res) => {
 
     const testimonyId = req.params.id
 
+    const testimony = await Testimony.findOne({ where: { id: testimonyId } })
+
+    //to delete the previously existing image, if exists
+    if (testimony.imageUrl) {
+
+        const path = "public/images/" + testimony.imageUrl
+
+        console.log("Deleting the previously existing image at " + path);
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+
+        }
+    }
+
     const deleted = await Testimony.destroy({ where: { id: testimonyId } })
+
+    console.log(deleted);
 
     if (deleted) {
         res.status(202).json({ "message": "Testimony  was deleted successfully." })

@@ -1,16 +1,17 @@
 const { Career } = require("../../models")
+const fs = require("fs")
 
 const postAddCareer = async (req, res) => {
     //Grabbing data from the form 
-    const { title, jobType, imageUrl, imageAlt, show, shortDescription, longDescription } = req.body
+    const { title, jobType, imageAlt, show, shortDescription, longDescription } = req.body
     //to avoid the error
     if (title === undefined || longDescription === undefined)
-        return res.status(401).json({ "message": "Please atleast provide the title and long descriptio." })
+        return res.status(401).json({ "message": "Please atleast provide the title and long description." })
 
     const career = await Career.create({
         title: title,
         jobType: jobType,
-        imageUrl: imageUrl,
+        imageUrl: req.file.filename,
         imageAlt: imageAlt,
         show: show,
         shortDescription: shortDescription,
@@ -52,7 +53,7 @@ const editCareerById = async (req, res) => {
     const careerId = req.params.id
 
     //Grabbing data from the form 
-    const { title, jobType, imageUrl, imageAlt, show, shortDescription, longDescription } = req.body
+    const { title, jobType, imageAlt, show, shortDescription, longDescription } = req.body
 
     //to avoid the error
     if (title === undefined || shortDescription === undefined || longDescription === undefined)
@@ -64,11 +65,27 @@ const editCareerById = async (req, res) => {
     if (career === null) {
         res.status(404).json({ "message": "Oops! we didn't find the career  that you are looking for." })
     } else {
+
+        //to delete the previously existing image, if exists
+        if (career.imageUrl) {
+
+            const path = "public/images/" + career.imageUrl
+
+            console.log("Deleting the previously existing image at " + path);
+
+            try {
+                fs.unlinkSync(path)
+                //file removed
+            } catch (err) {
+
+            }
+        }
+
         //updating the database
         const update = await career.update({
             title: title,
             jobType: jobType,
-            imageUrl: imageUrl,
+            imageUrl: req.file.filename,
             imageAlt: imageAlt,
             show: show,
             shortDescription: shortDescription,
@@ -89,6 +106,23 @@ const editCareerById = async (req, res) => {
 const deleteCareerById = async (req, res) => {
 
     const careerId = req.params.id
+
+    const career = await Career.findOne({ where: { id: careerId } })
+
+    //to delete the previously existing image, if exists
+    if (career.imageUrl) {
+
+        const path = "public/images/" + career.imageUrl
+
+        console.log("Deleting the previously existing image at " + path);
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+
+        }
+    }
 
     const deleted = await Career.destroy({ where: { id: careerId } })
 

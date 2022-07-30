@@ -2,6 +2,7 @@ const { Account } = require("../../models/")
 const { genSaltSync, hashSync, compareSync } = require("bcrypt")
 const { sign } = require("jsonwebtoken")
 const jwt_decode = require("jwt-decode")
+const fs = require("fs")
 
 const postLogin = async (req, res) => {
     const { email, password } = req.body
@@ -37,7 +38,7 @@ const deleteLogout = async (req, res) => {
 const postAddAccount = async (req, res) => {
 
     //Grabbing data from the form 
-    const { name, email, imageUrl, imageAlt, show, role, password } = req.body
+    const { name, email, imageAlt, show, role, password } = req.body
 
     //to avoid the error
     if (name === undefined || role === undefined || password === undefined)
@@ -58,7 +59,7 @@ const postAddAccount = async (req, res) => {
     const account = await Account.create({
         name: name,
         email: email.toLowerCase(),
-        imageUrl: imageUrl,
+        imageUrl: req.file.filename,
         imageAlt: imageAlt,
         show: show,
         role: role,
@@ -106,7 +107,7 @@ const editAccountById = async (req, res) => {
     const accountId = req.params.id
 
     //Grabbing data from the form 
-    const { name, imageUrl, imageAlt, show, role } = req.body
+    const { name, imageAlt, show, role } = req.body
 
     //to avoid the error
     if (name === undefined || role === undefined)
@@ -115,13 +116,41 @@ const editAccountById = async (req, res) => {
     //finding the account in the database
     const account = await Account.findOne({ where: { id: accountId } })
 
+    if (account.imageUrl) {
+
+        const path = './file.txt'
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     if (account === null) {
         res.status(404).json({ "message": "Oops! we didn't find the account member that you are looking for." })
     } else {
+
+        //to delete the previously existing image, if exists
+        if (account.imageUrl) {
+
+            const path = "public/images/" + account.imageUrl
+
+            console.log("Deleting the previously existing image at " + path);
+
+            try {
+                fs.unlinkSync(path)
+                //file removed
+            } catch (err) {
+
+            }
+        }
+
         //updating the database
         const update = await account.update({
             name: name,
-            imageUrl: imageUrl,
+            imageUrl: req.file.filename,
             imageAlt: imageAlt,
             show: show,
             role: role,
@@ -141,6 +170,23 @@ const editAccountById = async (req, res) => {
 const deleteAccountById = async (req, res) => {
 
     const accountId = req.params.id
+
+    const account = await Blog.findOne({ where: { id: accountId } })
+
+    //to delete the previously existing image, if exists
+    if (account.imageUrl) {
+
+        const path = "public/images/" + account.imageUrl
+
+        console.log("Deleting the previously existing image at " + path);
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+
+        }
+    }
 
     const deleted = await Account.destroy({ where: { id: accountId } })
 
@@ -195,13 +241,10 @@ const editAccountDetails = async (req, res) => {
 
     const token = req.cookies.token
 
-    if (!token)
-        return res.status(201).json({ "message": "Sorry! you are not authorized to perform the task." })
-
     const accountId = jwt_decode(token).id
 
     //Grabbing data from the form 
-    const { name, imageUrl, imageAlt, show } = req.body
+    const { name, imageAlt, show } = req.body
 
     //to avoid the error
     if (name === undefined)
@@ -213,10 +256,25 @@ const editAccountDetails = async (req, res) => {
     if (findAccount === null)
         return res.status(401).json({ "message": "Oops! no such user found with that email address" })
 
+    //to delete the previously existing image, if exists
+    if (findAccount.imageUrl) {
+
+        const path = "public/images/" + findAccount.imageUrl
+
+        console.log("Deleting the previously existing image at " + path);
+
+        try {
+            fs.unlinkSync(path)
+            //file removed
+        } catch (err) {
+
+        }
+    }
+
     //updating the database
     const update = await account.update({
         name: name,
-        imageUrl: imageUrl,
+        imageUrl: req.file.filename,
         imageAlt: imageAlt,
         show: show,
     })
