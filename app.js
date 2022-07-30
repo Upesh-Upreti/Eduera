@@ -52,6 +52,8 @@ const userCareersRoute = require("./routes/careers/userCareer")
 const frontendCareersRoute = require("./routes/careers/frontendCareer")
 //Account Routes
 const accountsRoute = require("./routes/accounts/account")
+//Contact Us Routes
+const contactsRoute = require("./routes/contact/contact")
 //Page not found Route
 const errorController = require("./controllers/error")
 
@@ -75,6 +77,8 @@ app.use("/api/v1/user", userCareersRoute)
 app.use("/api/v1/", frontendCareersRoute)
 //Route to handle the account requests
 app.use("/api/v1/user", accountsRoute)
+//Route to handle the contact us requests
+app.use("/api/v1/user", contactsRoute)
 
 app.get("/", (req, res) => {
 	res.status(200).json({ "message": "Hello there! this server is up and running" })
