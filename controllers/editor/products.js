@@ -18,18 +18,19 @@ const postAddProduct = async (req, res) => {
   if (
     title === undefined ||
     shortDescription === undefined ||
-    longDescription === undefined
+    longDescription === undefined ||
+    req.file === null
   )
     return res.status(401).json({
       message:
-        "Please atleast provide the title, short description and long descriptio.",
+        "Please atleast provide the title, image, short description and long descriptio.",
     });
 
   const product = await Product.create({
     title: title,
     category: category,
     price: price,
-    imageUrl: req.file.filename,
+    imageUrl: "public/images/" + req.file.filename,
     imageAlt: imageAlt,
     show: show,
     slug: slug,
@@ -68,7 +69,7 @@ const editProductById = async (req, res) => {
     shortDescription === undefined ||
     longDescription === undefined
   )
-    return res.status(401).json({
+    return res.status(400).json({
       message:
         "Please atleast provide the title, short description and long descriptio.",
     });
@@ -82,22 +83,19 @@ const editProductById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    if (product.imageUrl) {
-      const path = "public/images/" + product.imageUrl;
-
-      console.log("Deleting the previously existing image at " + path);
-
+    const path = product.imageUrl
+    if (req.file) {
       try {
         fs.unlinkSync(path);
         //file removed
-      } catch (err) {}
+      } catch (err) { }
     }
     //updating the database
     const update = await product.update({
       title: title,
       category: category,
       price: price,
-      imageUrl: req.file.filename,
+      imageUrl: req.file ? "public/images/" + req.file.filename : path,
       imageAlt: imageAlt,
       show: show,
       slug: slug,
@@ -123,16 +121,18 @@ const deleteProductById = async (req, res) => {
 
   const product = await Product.findOne({ where: { id: productId } });
 
+  if (!product)
+    return res.status(404).json({ "message": "Sorry! no such product found." })
+
   //to delete the previously existing image, if exists
   if (product.imageUrl) {
-    const path = "public/images/" + product.imageUrl;
-
+    const path = product.imageUrl;
     console.log("Deleting the previously existing image at " + path);
 
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Product.destroy({ where: { id: productId } });

@@ -15,16 +15,17 @@ const postAddBlog = async (req, res) => {
   if (
     title === undefined ||
     shortDescription === undefined ||
-    longDescription === undefined
+    longDescription === undefined ||
+    req.file === null
   )
     return res.status(401).json({
       message:
-        "Please atleast provide the title, short description and long descriptio.",
+        "Please atleast provide the title, image, short description and long descriptio.",
     });
   const blog = await Blog.create({
     title: title,
     category: category,
-    imageUrl: req.file.filename,
+    imageUrl: "public/images/" + req.file.filename,
     imageAlt: imageAlt,
     show: show,
     slug: slug,
@@ -74,21 +75,18 @@ const editBlogById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    if (blog.imageUrl) {
-      const path = "public/images/" + blog.imageUrl;
-
-      console.log("Deleting the previously existing image at " + path);
-
+    const path = blog.imageUrl
+    if (req.file) {
       try {
         fs.unlinkSync(path);
         //file removed
-      } catch (err) {}
+      } catch (err) { }
     }
     //updating the database
     const update = await blog.update({
       title: title,
       category: category,
-      imageUrl: req.file.filename,
+      imageUrl: req.file ? "public/images/" + req.file.filename : path,
       imageAlt: imageAlt,
       show: show,
       slug: slug,
@@ -123,7 +121,7 @@ const deleteBlogById = async (req, res) => {
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Blog.destroy({ where: { id: blogId } });

@@ -17,7 +17,7 @@ const postAddTeamMember = async (req, res) => {
 
   //to avoid the error
   if (name === undefined || designation === undefined || req.file === undefined)
-    return res.status(401).json({
+    return res.status(400).json({
       message: "Please atleast provide the name, designation and image.",
     });
 
@@ -25,7 +25,7 @@ const postAddTeamMember = async (req, res) => {
     name: name,
     designation: designation,
     orderNumber: orderNumber,
-    imageUrl: req.file.filename,
+    imageUrl: "public/images/" + req.file.filename,
     imageAlt: imageAlt,
     show: show,
     facebookLink: facebookLink,
@@ -58,6 +58,7 @@ const editTeamMemberById = async (req, res) => {
     linkedinLink,
   } = req.body;
 
+
   //to avoid the error
   if (
     name === undefined ||
@@ -78,22 +79,19 @@ const editTeamMemberById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    if (team.imageUrl) {
-      const path = "public/images/" + team.imageUrl;
-
-      console.log("Deleting the previously existing image at " + path);
-
+    const path = team.imageUrl;
+    if (req.file) {
       try {
         fs.unlinkSync(path);
         //file removed
-      } catch (err) {}
+      } catch (err) { }
     }
     //updating the database
     const update = await team.update({
       name: name,
       designation: designation,
       orderNumber: orderNumber,
-      imageUrl: req.file.filename,
+      imageUrl: req.file ? "public/images/" + req.file.filename : path,
       imageAlt: imageAlt,
       show: show,
       facebookLink: facebookLink,
@@ -120,16 +118,17 @@ const deleteTeamMemberById = async (req, res) => {
 
   const team = await Team.findOne({ where: { id: teamId } });
 
+  if (!team)
+    return res.status(404).json({ "message": "Sorry! no such team member found." })
+
   //to delete the previously existing image, if exists
   if (team.imageUrl) {
-    const path = "public/images/" + team.imageUrl;
-
-    console.log("Deleting the previously existing image at " + path);
+    const path = team.imageUrl;
 
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Team.destroy({ where: { id: teamId } });

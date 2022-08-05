@@ -14,7 +14,7 @@ const postAddCareer = async (req, res) => {
   const career = await Career.create({
     title: title,
     jobType: jobType,
-    imageUrl: req.file.filename,
+    imageUrl: req.file ? "public/images/" + req.file.filename : "null",
     imageAlt: imageAlt,
     show: show,
     shortDescription: shortDescription,
@@ -56,22 +56,19 @@ const editCareerById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    if (career.imageUrl) {
-      const path = "public/images/" + career.imageUrl;
-
-      console.log("Deleting the previously existing image at " + path);
-
+    const path = career.imageUrl;
+    if (req.file) {
       try {
         fs.unlinkSync(path);
         //file removed
-      } catch (err) {}
+      } catch (err) { }
     }
 
     //updating the database
     const update = await career.update({
       title: title,
       jobType: jobType,
-      imageUrl: req.file.filename,
+      imageUrl: req.file ? "public/images/" + req.file.filename : path,
       imageAlt: imageAlt,
       show: show,
       shortDescription: shortDescription,
@@ -98,14 +95,11 @@ const deleteCareerById = async (req, res) => {
 
   //to delete the previously existing image, if exists
   if (career.imageUrl) {
-    const path = "public/images/" + career.imageUrl;
-
-    console.log("Deleting the previously existing image at " + path);
-
+    const path = career.imageUrl;
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Career.destroy({ where: { id: careerId } });

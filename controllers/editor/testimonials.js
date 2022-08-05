@@ -20,7 +20,7 @@ const postAddTestimony = async (req, res) => {
   const testimonial = await Testimony.create({
     name: name,
     designation: designation,
-    imageUrl: req.file.filename,
+    imageUrl: "public/images/" + req.file.filename,
     imageAlt: imageAlt,
     show: show,
     testimony: testimony,
@@ -44,12 +44,11 @@ const editTestimonyById = async (req, res) => {
   if (
     name === undefined ||
     designation === undefined ||
-    req.file === undefined ||
     testimony === undefined
   )
     return res.status(401).json({
       message:
-        "Please atleast provide the name, designation, image and testimony.",
+        "Please atleast provide the name, designation and testimony.",
     });
 
   //finding the testimonial  in the database
@@ -62,11 +61,8 @@ const editTestimonyById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    if (testimonial.imageUrl) {
-      const path = "public/images/" + testimonial.imageUrl;
-
-      console.log("Deleting the previously existing image at " + path);
-
+    const path = testimonial.imageUrl;
+    if (req.file) {
       try {
         fs.unlinkSync(path);
         //file removed
@@ -77,7 +73,7 @@ const editTestimonyById = async (req, res) => {
     //updating the database
     const update = await testimonial.update({
       name: name,
-      imageUrl: req.file.filename,
+      imageUrl: req.file ? "public/images" + req.file.filename : path,
       imageAlt: imageAlt,
       show: show,
       testimony: testimony,
@@ -101,16 +97,21 @@ const deleteTestimonyById = async (req, res) => {
 
   const testimony = await Testimony.findOne({ where: { id: testimonyId } });
 
+  if (!testimony)
+    return res.status(404).json({
+      message: "Oops! we didn't find the testimony that you are looking for.",
+    })
+
   //to delete the previously existing image, if exists
   if (testimony.imageUrl) {
-    const path = "public/images/" + testimony.imageUrl;
+    const path = testimony.imageUrl;
 
     console.log("Deleting the previously existing image at " + path);
 
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Testimony.destroy({ where: { id: testimonyId } });
