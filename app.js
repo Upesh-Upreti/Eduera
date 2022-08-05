@@ -45,14 +45,14 @@ const errorController = require("./controllers/error");
 //Database
 const sequelize = require("./util/database");
 
-//?routing
-//? auth routes
+//? :::::::------ ROUTES -----::::::::::
+//?  ------- AUTH ROUTES ---------
 app.use("/api/v1/auth", require("./routes/auth"));
 
-//? admin routes
+//?  ------- ADMIN ROUTES ---------
 app.use("/api/v1/admin/accounts", require("./routes/admin/accounts"));
 
-//? frontend routes
+//?  ------- FRONTEND ROUTES ---------
 app.use("/api/v1/blogs", require("./routes/frontend/blogs"));
 app.use("/api/v1/products", require("./routes/frontend/products"));
 app.use("/api/v1/careers", require("./routes/frontend/careers"));
@@ -60,7 +60,7 @@ app.use("/api/v1/contacts", require("./routes/frontend/contacts"));
 app.use("/api/v1/teams", require("./routes/frontend/teams"));
 app.use("/api/v1/testimonials", require("./routes/frontend/testimonials"));
 
-//? editor routes
+//? ------- EDITOR ROUTES ---------
 app.use("/api/v1/editor/account", require("./routes/editor/account"));
 app.use("/api/v1/editor/blogs", require("./routes/editor/blogs"));
 app.use("/api/v1/editor/products", require("./routes/editor/products"));
@@ -69,6 +69,7 @@ app.use("/api/v1/editor/contacts", require("./routes/editor/contacts"));
 app.use("/api/v1/editor/teams", require("./routes/editor/teams"));
 app.use("/api/v1/editor/testimonails", require("./routes/editor/testimonials"));
 
+//?  ------- REST ROUTES ---------
 app.get("/", (req, res) => {
   res
     .status(200)
