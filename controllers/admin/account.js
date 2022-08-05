@@ -86,7 +86,7 @@ const editAccountById = async (req, res) => {
   //to avoid the error
   if (name === undefined || role === undefined)
     return res
-      .status(401)
+      .status(400)
       .json({ message: "Please atleast provide the name, role and password." });
 
   //finding the account in the database
@@ -105,8 +105,7 @@ const editAccountById = async (req, res) => {
 
   if (account === null) {
     res.status(404).json({
-      message:
-        "Oops! we didn't find the account member that you are looking for.",
+      message: "Oops! we didn't find the account that you are looking for.",
     });
   } else {
     //to delete the previously existing image, if exists
@@ -138,7 +137,9 @@ const editAccountById = async (req, res) => {
         .status(500)
         .json({ message: "Sorry we couldn't update the database." });
     } else {
-      res.status(202).json({ message: "Database was updated sucessfully." });
+      res
+        .status(202)
+        .json({ message: "User account was updated sucessfully." });
     }
   }
 };
@@ -174,57 +175,6 @@ const deleteAccountById = async (req, res) => {
   }
 };
 
-const editAccountDetails = async (req, res) => {
-  const token = req.cookies.token;
-
-  const accountId = jwt_decode(token).id;
-
-  //Grabbing data from the form
-  const { name, imageAlt, show } = req.body;
-
-  //to avoid the error
-  if (name === undefined)
-    return res
-      .status(401)
-      .json({ message: "Please atleast provide the name, role and password." });
-
-  const findAccount = await Account.findOne({ where: { id: accountId } });
-
-  if (findAccount === null)
-    return res
-      .status(401)
-      .json({ message: "Oops! no such user found with that email address" });
-
-  //to delete the previously existing image, if exists
-  if (findAccount.imageUrl) {
-    const path = "public/images/" + findAccount.imageUrl;
-
-    console.log("Deleting the previously existing image at " + path);
-
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) {}
-  }
-
-  //updating the database
-  const update = await account.update({
-    name: name,
-    imageUrl: req.file.filename,
-    imageAlt: imageAlt,
-    show: show,
-  });
-
-  //saving the updates into the database
-  const saved = await update.save();
-
-  if (saved === null) {
-    res.status(500).json({ message: "Sorry we couldn't update the database." });
-  } else {
-    res.status(202).json({ message: "Database was updated sucessfully." });
-  }
-};
-
 const resetPassword = async (req, res) => {
   const accountId = req.params.id;
 
@@ -233,7 +183,7 @@ const resetPassword = async (req, res) => {
 
   //to avoid the error
   if (password === undefined || password.length < 8)
-    return res.status(401).json({
+    return res.status(400).json({
       message: "Please atleast provide the password with atleast 8 characters.",
     });
 
@@ -261,7 +211,9 @@ const resetPassword = async (req, res) => {
         .status(500)
         .json({ message: "Sorry we couldn't update the database." });
     } else {
-      res.status(202).json({ message: "Database was updated sucessfully." });
+      res
+        .status(202)
+        .json({ message: "Password updated was updated sucessfully." });
     }
   }
 };
@@ -272,6 +224,5 @@ module.exports = {
   getAccountById,
   editAccountById,
   deleteAccountById,
-  editAccountDetails,
   resetPassword,
 };

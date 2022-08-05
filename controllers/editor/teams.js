@@ -60,13 +60,13 @@ const editTeamMemberById = async (req, res) => {
 
   //to avoid the error
   if (
-    title === undefined ||
-    shortDescription === undefined ||
-    longDescription === undefined
+    name === undefined ||
+    name === "" ||
+    designation === undefined ||
+    designation === ""
   )
-    return res.status(401).json({
-      message:
-        "Please atleast provide the title, short description and long descriptio.",
+    return res.status(400).json({
+      message: "Please atleast provide the name and designation",
     });
 
   //finding the team member in the database
