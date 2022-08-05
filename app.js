@@ -1,96 +1,94 @@
-const express = require("express")
-const dotenv = require("dotenv")
-const cookieParser = require("cookie-parser")
-const multer = require("multer")
+const express = require("express");
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const multer = require("multer");
 
-const app = express()
+const app = express();
 
 //file storage configuration for multer
 const fileStorage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, "public/images")
-	},
-	filename: (req, file, cb) => {
-		cb(null, Date.now() + '-' + file.originalname)
-	}
-})
+  destination: (req, file, cb) => {
+    cb(null, "public/images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
-//file filter for multer 
+//file filter for multer
 const filefilter = (req, file, cb) => {
-	if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg" || file.mimetype === "image/png" || file.mimetype === "image/webp") {
-		cb(null, true)
-	} else {
-		cb(null, false)
-	}
-}
-
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/webp"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 //middlewares
-app.use(express.static('public'))
-app.use(cookieParser())
-app.use(express.json())
-app.use(multer({ storage: fileStorage, fileFilter: filefilter }).single("image"))
+app.use(express.static("public"));
+app.use(cookieParser());
+app.use(express.json());
+app.use(
+  multer({ storage: fileStorage, fileFilter: filefilter }).single("image")
+);
 
+dotenv.config();
 
-dotenv.config()
-
-//Our routes to handle different requests accordingly
-//Product Routes
-const userProductRoute = require("./routes/products/userProduct")
-const frontendProductRoute = require("./routes/products/frontendProduct")
-//Team Routes
-const userTeamRoute = require("./routes/team/userTeam")
-const frontendTeamRoute = require("./routes/team/frontendTeam")
-//Blog Routes
-const userBlogRoute = require("./routes/blogs/userBlog")
-const frontendBlogRoute = require("./routes/blogs/frontendBlog")
-//Tetimony Routes
-const userTestimoniesRoute = require("./routes/testimonies/userTestimonies")
-const frontendTestimoniesRoute = require("./routes/testimonies/frontendTestimonies")
-//Career Routes
-const userCareersRoute = require("./routes/careers/userCareer")
-const frontendCareersRoute = require("./routes/careers/frontendCareer")
-//Account Routes
-const accountsRoute = require("./routes/accounts/account")
-//Contact Us Routes
-const contactsRoute = require("./routes/contact/contact")
 //Page not found Route
-const errorController = require("./controllers/error")
+const errorController = require("./controllers/error");
 
-//Database 
-const sequelize = require('./util/database')
+//Database
+const sequelize = require("./util/database");
+const { checkToken } = require("./auth/tokenValidation");
+const { isAdmin } = require("./auth/adminValidation");
 
-//Route to handle the product requests
-app.use("/api/v1/user", userProductRoute)
-app.use("/api/v1", frontendProductRoute)
-//Route to handle the team member requests
-app.use("/api/v1/user", userTeamRoute)
-app.use("/api/v1", frontendTeamRoute)
-//Route to handle the blog requests
-app.use("/api/v1/user", userBlogRoute)
-app.use("/api/v1", frontendBlogRoute)
-//Route to handle the testimony requests
-app.use("/api/v1/user", userTestimoniesRoute)
-app.use("/api/v1", frontendTestimoniesRoute)
-//Route to handle the Career requests
-app.use("/api/v1/user", userCareersRoute)
-app.use("/api/v1/", frontendCareersRoute)
-//Route to handle the account requests
-app.use("/api/v1/user", accountsRoute)
-//Route to handle the contact us requests
-app.use("/api/v1/user", contactsRoute)
+//?routing
+//? auth routes
+app.use("/api/v1/auth", require("./routes/auth"));
+
+//? admin routes
+const adminRoute = app.use("api/v1/admin", checkToken, isAdmin);
+
+adminRoute.use("/accounts", require("./routes/admin/accounts"));
+adminRoute.use("/blogs", require("./routes/admin/blogs"));
+adminRoute.use("/products", require("./routes/admin/products"));
+adminRoute.use("/careers", require("./routes/admin/careers"));
+adminRoute.use("/contacts", require("./routes/admin/contacts"));
+adminRoute.use("/teams", require("./routes/admin/teams"));
+adminRoute.use("/testimonails", require("./routes/admin/testimonials"));
+
+//? frontend routes
+app.use("/api/v1/blogs", require("./routes/frontend/blogs"));
+app.use("/api/v1/products", require("./routes/frontend/products"));
+app.use("/api/v1/careers", require("./routes/frontend/careers"));
+app.use("/api/v1/contacts", require("./routes/frontend/contacts"));
+app.use("/api/v1/teams", require("./routes/frontend/teams"));
+app.use("/api/v1/testimonials", require("./routes/frontend/testimonials"));
+
+//? user routes
+const userRoute = app.use("api/v1/user", checkToken);
+userRoute.use("/account", require("./routes/user/account"));
 
 app.get("/", (req, res) => {
-	res.status(200).json({ "message": "Hello there! this server is up and running" })
-})
+  res
+    .status(200)
+    .json({ message: "Hello there! this server is up and running" });
+});
 
 //For 404 handling
-app.use(errorController.get404)
+app.use(errorController.get404);
 
 app.listen(3000, (req, res) => {
-	console.log("Server is up and running at port 3000.")
-})
+  console.log("Server is up and running at port 3000.");
+});
 
-const syncDatabase = async () => { console.log(`Sequelize Synching message : ${await sequelize.sync()}`) }
+const syncDatabase = async () => {
+  console.log(`Sequelize Synching message : ${await sequelize.sync()}`);
+};
 
-syncDatabase()
+syncDatabase();
