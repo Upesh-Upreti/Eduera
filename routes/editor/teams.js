@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const teamsController = require("../../controllers/editor/teams");
+const withLoggedIn = require("../../middlewares/withLoggedIn");
 
-const teamsController = require("../../controllers/admin/teams");
+//? middleware
+router.use(withLoggedIn);
 
 //To add a new team member.
 router.post("/add", teamsController.postAddTeamMember);

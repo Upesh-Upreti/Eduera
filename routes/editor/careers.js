@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const careersController = require("../../controllers/editor/careers");
+const withLoggedIn = require("../../middlewares/withLoggedIn");
 
-const careersController = require("../../controllers/admin/careers");
+//? middleware
+router.use(withLoggedIn);
 
 //To add a new career.
 router.post("/add", careersController.postAddCareer);

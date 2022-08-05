@@ -1,4 +1,4 @@
-const { Account } = require("../../models/");
+const { Account } = require("../../models");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const jwt_decode = require("jwt-decode");
 const fs = require("fs");

@@ -1,11 +1,10 @@
 const express = require("express");
-const { checkToken } = require("../../auth/tokenValidation");
-
 const router = express.Router();
+const withLoggedIn = require("../../middlewares/withLoggedIn");
+const accountController = require("../../controllers/editor/account");
 
-const accountController = require("../../controllers/user/account");
-
-router.use("/", checkToken);
+//? middleware
+router.use(withLoggedIn);
 
 //To change own password by the user
 router.patch("/change-password", accountController.changePassword);

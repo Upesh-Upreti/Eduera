@@ -10,33 +10,29 @@ const postAddAccount = async (req, res) => {
 
   //to avoid the error
   if (name === undefined || role === undefined || password === undefined)
-    return res
-      .status(401)
-      .json({
-        message: "Please atleast provide the name, email, role and password.",
-      });
+    return res.status(400).json({
+      message: "Please at least provide the name, email, role and password.",
+    });
 
   const findAccount = await Account.findOne({ where: { email: email } });
 
   if (findAccount)
     return res
-      .status(401)
+      .status(409)
       .json({ message: "Oops! a user already exists with that email address" });
 
   //Generting salt for password
   const salt = genSaltSync(10);
 
   if (password.length < 8)
-    return res
-      .status(401)
-      .json({
-        message: "Please provide the password with atleast of 8 characters.",
-      });
+    return res.status(400).json({
+      message: "Please provide the password with atleast of 8 characters.",
+    });
 
   const account = await Account.create({
     name: name,
     email: email.toLowerCase(),
-    imageUrl: req.file.filename,
+    imageUrl: req?.file?.filename ?? "",
     imageAlt: imageAlt,
     show: show,
     role: role,
@@ -70,12 +66,10 @@ const getAccountById = async (req, res) => {
   let account = await Account.findOne({ where: { id: accountId } });
 
   if (account === null) {
-    res
-      .status(404)
-      .json({
-        message:
-          "Oops! we didn't find the account Member that you are looking for.",
-      });
+    res.status(404).json({
+      message:
+        "Oops! we didn't find the account Member that you are looking for.",
+    });
   } else {
     //To not to send the hashed password
     //account.filter((acc) => Object.fromEntries(Object.entries(acc).filter(([key]) => key.includes('password')));)
@@ -110,12 +104,10 @@ const editAccountById = async (req, res) => {
   }
 
   if (account === null) {
-    res
-      .status(404)
-      .json({
-        message:
-          "Oops! we didn't find the account member that you are looking for.",
-      });
+    res.status(404).json({
+      message:
+        "Oops! we didn't find the account member that you are looking for.",
+    });
   } else {
     //to delete the previously existing image, if exists
     if (account.imageUrl) {
@@ -175,12 +167,10 @@ const deleteAccountById = async (req, res) => {
       .status(202)
       .json({ message: "account member was deleted successfully." });
   } else {
-    res
-      .status(404)
-      .json({
-        message:
-          "No such account member was found or the account member was already deleted",
-      });
+    res.status(404).json({
+      message:
+        "No such account member was found or the account member was already deleted",
+    });
   }
 };
 
@@ -243,22 +233,17 @@ const resetPassword = async (req, res) => {
 
   //to avoid the error
   if (password === undefined || password.length < 8)
-    return res
-      .status(401)
-      .json({
-        message:
-          "Please atleast provide the password with atleast 8 characters.",
-      });
+    return res.status(401).json({
+      message: "Please atleast provide the password with atleast 8 characters.",
+    });
 
   const findAccount = await Account.findOne({ where: { id: accountId } });
 
   if (findAccount === null) {
-    res
-      .status(404)
-      .json({
-        message:
-          "Oops! we didn't find the account member that you are looking for.",
-      });
+    res.status(404).json({
+      message:
+        "Oops! we didn't find the account member that you are looking for.",
+    });
   } else {
     //Generting salt for password
     const salt = genSaltSync(10);

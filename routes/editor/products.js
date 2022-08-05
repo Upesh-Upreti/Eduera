@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const productsController = require("../../controllers/editor/products");
+const withLoggedIn = require("../../middlewares/withLoggedIn");
 
-const productsController = require("../../controllers/admin/products");
+//? middleware
+router.use(withLoggedIn);
 
 //To add a new product.
 router.post("/add", productsController.postAddProduct);

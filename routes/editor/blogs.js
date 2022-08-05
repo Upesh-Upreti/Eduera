@@ -1,8 +1,10 @@
 const express = require("express");
-
 const router = express.Router();
+const withLoggedIn = require("../../middlewares/withLoggedIn");
+const userController = require("../../controllers/editor/blogs");
 
-const userController = require("../../controllers/admin/blogs");
+//? middleware
+router.use(withLoggedIn);
 
 //To add a new blog.
 router.post("/add", userController.postAddBlog);

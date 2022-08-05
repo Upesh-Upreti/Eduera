@@ -1,8 +1,12 @@
 const express = require("express");
-
 const router = express.Router();
+const withAdmin = require("../../middlewares/withAdmin");
+const withLoggedIn = require("../../middlewares/withLoggedIn");
 
 const accountController = require("../../controllers/admin/account");
+
+//? middleware
+router.use(withLoggedIn, withAdmin);
 
 //To get all the available accounts .
 router.get("/", accountController.getAllAccounts);

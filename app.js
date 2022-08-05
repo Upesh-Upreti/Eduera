@@ -44,23 +44,13 @@ const errorController = require("./controllers/error");
 
 //Database
 const sequelize = require("./util/database");
-const { checkToken } = require("./auth/tokenValidation");
-const { isAdmin } = require("./auth/adminValidation");
 
 //?routing
 //? auth routes
 app.use("/api/v1/auth", require("./routes/auth"));
 
 //? admin routes
-const adminRoute = app.use("api/v1/admin", checkToken, isAdmin);
-
-adminRoute.use("/accounts", require("./routes/admin/accounts"));
-adminRoute.use("/blogs", require("./routes/admin/blogs"));
-adminRoute.use("/products", require("./routes/admin/products"));
-adminRoute.use("/careers", require("./routes/admin/careers"));
-adminRoute.use("/contacts", require("./routes/admin/contacts"));
-adminRoute.use("/teams", require("./routes/admin/teams"));
-adminRoute.use("/testimonails", require("./routes/admin/testimonials"));
+app.use("/api/v1/admin/accounts", require("./routes/admin/accounts"));
 
 //? frontend routes
 app.use("/api/v1/blogs", require("./routes/frontend/blogs"));
@@ -70,9 +60,14 @@ app.use("/api/v1/contacts", require("./routes/frontend/contacts"));
 app.use("/api/v1/teams", require("./routes/frontend/teams"));
 app.use("/api/v1/testimonials", require("./routes/frontend/testimonials"));
 
-//? user routes
-const userRoute = app.use("api/v1/user", checkToken);
-userRoute.use("/account", require("./routes/user/account"));
+//? editor routes
+app.use("/api/v1/editor/account", require("./routes/editor/account"));
+app.use("/api/v1/editor/blogs", require("./routes/editor/blogs"));
+app.use("/api/v1/editor/products", require("./routes/editor/products"));
+app.use("/api/v1/editor/careers", require("./routes/editor/careers"));
+app.use("/api/v1/editor/contacts", require("./routes/editor/contacts"));
+app.use("/api/v1/editor/teams", require("./routes/editor/teams"));
+app.use("/api/v1/editor/testimonails", require("./routes/editor/testimonials"));
 
 app.get("/", (req, res) => {
   res

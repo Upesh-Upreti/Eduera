@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const testimonialsController = require("../../controllers/editor/testimonials");
+const withLoggedIn = require("../../middlewares/withLoggedIn");
 
-const testimonialsController = require("../../controllers/admin/testimonials");
+//? middleware
+router.use(withLoggedIn);
 
 //To add a new testimony.
 router.post("/add", testimonialsController.postAddTestimony);
