@@ -2,8 +2,10 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
-
+var cors = require("cors");
 const app = express();
+
+app.use(cors());
 
 //file storage configuration for multer
 const fileStorage = multer.diskStorage({

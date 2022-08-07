@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "root",
-    "password": "Upesh@123",
+    "username": "admin",
+    "password": "Ar123456789",
     "database": "eduera",
     "host": "127.0.0.1",
     "dialect": "mysql"
