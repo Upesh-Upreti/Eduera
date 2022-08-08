@@ -5,7 +5,12 @@ const multer = require("multer");
 var cors = require("cors");
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 
 //file storage configuration for multer
 const fileStorage = multer.diskStorage({
@@ -47,6 +52,12 @@ const errorController = require("./controllers/error");
 //Database
 const sequelize = require("./util/database");
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
+  next();
+});
 //? :::::::------ ROUTES -----::::::::::
 //?  ------- AUTH ROUTES ---------
 app.use("/api/v1/auth", require("./routes/auth"));
@@ -81,8 +92,8 @@ app.get("/", (req, res) => {
 //For 404 handling
 app.use(errorController.get404);
 
-app.listen(3000, (req, res) => {
-  console.log("Server is up and running at port 3000.");
+app.listen(4000, (req, res) => {
+  console.log("Server is up and running at port 4000.");
 });
 
 const syncDatabase = async () => {

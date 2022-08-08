@@ -83,12 +83,12 @@ const editProductById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = product.imageUrl
+    const path = product.imageUrl;
     if (req.file) {
       try {
         fs.unlinkSync(path);
         //file removed
-      } catch (err) { }
+      } catch (err) {}
     }
     //updating the database
     const update = await product.update({
@@ -122,7 +122,7 @@ const deleteProductById = async (req, res) => {
   const product = await Product.findOne({ where: { id: productId } });
 
   if (!product)
-    return res.status(404).json({ "message": "Sorry! no such product found." })
+    return res.status(404).json({ message: "Sorry! no such product found." });
 
   //to delete the previously existing image, if exists
   if (product.imageUrl) {
@@ -132,7 +132,7 @@ const deleteProductById = async (req, res) => {
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) { }
+    } catch (err) {}
   }
 
   const deleted = await Product.destroy({ where: { id: productId } });

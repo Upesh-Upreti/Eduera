@@ -177,7 +177,6 @@ const deleteAccountById = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   const accountId = req.params.id;
-
   //Grabbing data from the form
   const { password } = req.body;
 

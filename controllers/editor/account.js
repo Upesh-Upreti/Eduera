@@ -2,6 +2,8 @@ const { Account } = require("../../models");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const jwt_decode = require("jwt-decode");
 const fs = require("fs");
+const yup = require("yup");
+const validate = require("../../util/validate");
 
 const changePassword = async (req, res) => {
   const token = req.cookies.token;
@@ -10,6 +12,12 @@ const changePassword = async (req, res) => {
 
   //Grabbing data from the form
   const { currentPassword, newPassword } = req.body;
+
+  const passwordSchema = yup.object({
+    newPassword: yup.string().required().min(8),
+  });
+
+  validate(passwordSchema, newPassword);
 
   //to avoid the error
   if (currentPassword === undefined || newPassword === undefined)
