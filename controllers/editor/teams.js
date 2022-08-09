@@ -1,4 +1,5 @@
 const { Team } = require("../../models");
+const crypto = require("crypto")
 const fs = require("fs");
 
 const postAddTeamMember = async (req, res) => {
@@ -22,6 +23,7 @@ const postAddTeamMember = async (req, res) => {
     });
 
   const team = await Team.create({
+    id: crypto.randomBytes(16).toString("hex"),
     name: name,
     designation: designation,
     orderNumber: orderNumber,
@@ -74,7 +76,7 @@ const editTeamMemberById = async (req, res) => {
   const team = await Team.findOne({ where: { id: teamId } });
 
   if (team === null) {
-    res.status(404).json({
+    res.status(400).json({
       message: "Oops! we didn't find the team member that you are looking for.",
     });
   } else {
@@ -136,7 +138,7 @@ const deleteTeamMemberById = async (req, res) => {
   if (deleted) {
     res.status(202).json({ message: "Team member was deleted successfully." });
   } else {
-    res.status(404).json({
+    res.status(400).json({
       message:
         "No such team member was found or the Team member was already deleted",
     });

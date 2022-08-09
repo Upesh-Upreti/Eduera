@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "admin",
-    "password": "Ar123456789",
+    "username": "root",
+    "password": "Upesh@123",
     "database": "eduera",
     "host": "127.0.0.1",
     "dialect": "mysql"
@@ -14,8 +14,8 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "admin",
-    "password": "Ar123456789",
+    "username": "root",
+    "password": "Upesh@123",
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "mysql"

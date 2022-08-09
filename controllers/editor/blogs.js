@@ -1,4 +1,5 @@
 const { Blog } = require("../../models");
+const crypto = require("crypto")
 
 const postAddBlog = async (req, res) => {
   //Grabbing data from the form
@@ -23,6 +24,7 @@ const postAddBlog = async (req, res) => {
         "Please atleast provide the title, image, short description and long descriptio.",
     });
   const blog = await Blog.create({
+    id: crypto.randomBytes(16).toString("hex"),
     title: title,
     category: category,
     imageUrl: "public/images/" + req.file.filename,
@@ -61,7 +63,7 @@ const editBlogById = async (req, res) => {
     shortDescription === undefined ||
     longDescription === undefined
   )
-    return res.status(401).json({
+    return res.status(400).json({
       message:
         "Please atleast provide the title, short description and long descriptio.",
     });
@@ -70,7 +72,7 @@ const editBlogById = async (req, res) => {
   const blog = await Blog.findOne({ where: { id: blogId } });
 
   if (blog === null) {
-    res.status(404).json({
+    res.status(400).json({
       message: "Oops! we didn't find the blog member that you are looking for.",
     });
   } else {
@@ -129,7 +131,7 @@ const deleteBlogById = async (req, res) => {
   if (deleted) {
     res.status(202).json({ message: "Blog member was deleted successfully." });
   } else {
-    res.status(404).json({
+    res.status(400).json({
       message:
         "No such blog member was found or the Blog member was already deleted",
     });

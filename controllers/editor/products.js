@@ -1,4 +1,5 @@
 const { Product } = require("../../models");
+const crypto = require("crypto")
 const fs = require("fs");
 
 const postAddProduct = async (req, res) => {
@@ -21,12 +22,13 @@ const postAddProduct = async (req, res) => {
     longDescription === undefined ||
     req.file === null
   )
-    return res.status(401).json({
+    return res.status(400).json({
       message:
         "Please atleast provide the title, image, short description and long descriptio.",
     });
 
   const product = await Product.create({
+    id: crypto.randomBytes(16).toString("hex"),
     title: title,
     category: category,
     price: price,
@@ -88,7 +90,7 @@ const editProductById = async (req, res) => {
       try {
         fs.unlinkSync(path);
         //file removed
-      } catch (err) {}
+      } catch (err) { }
     }
     //updating the database
     const update = await product.update({
@@ -122,7 +124,7 @@ const deleteProductById = async (req, res) => {
   const product = await Product.findOne({ where: { id: productId } });
 
   if (!product)
-    return res.status(404).json({ message: "Sorry! no such product found." });
+    return res.status(400).json({ message: "Sorry! no such product found." });
 
   //to delete the previously existing image, if exists
   if (product.imageUrl) {
@@ -132,7 +134,7 @@ const deleteProductById = async (req, res) => {
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Product.destroy({ where: { id: productId } });
@@ -140,7 +142,7 @@ const deleteProductById = async (req, res) => {
   if (deleted) {
     res.status(202).json({ message: "Product was deleted successfully." });
   } else {
-    res.status(404).json({
+    res.status(400).json({
       message: "No such product was found or the product was already deleted",
     });
   }

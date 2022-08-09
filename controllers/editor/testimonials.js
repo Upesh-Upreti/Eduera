@@ -1,4 +1,5 @@
 const { Testimony } = require("../../models");
+const crypto = require("crypto")
 const fs = require("fs");
 
 const postAddTestimony = async (req, res) => {
@@ -18,6 +19,7 @@ const postAddTestimony = async (req, res) => {
     });
 
   const testimonial = await Testimony.create({
+    id: crypto.randomBytes(16).toString("hex"),
     name: name,
     designation: designation,
     imageUrl: "public/images/" + req.file.filename,
@@ -46,7 +48,7 @@ const editTestimonyById = async (req, res) => {
     designation === undefined ||
     testimony === undefined
   )
-    return res.status(401).json({
+    return res.status(400).json({
       message:
         "Please atleast provide the name, designation and testimony.",
     });
@@ -55,7 +57,7 @@ const editTestimonyById = async (req, res) => {
   const testimonial = await Testimony.findOne({ where: { id: testimonyId } });
 
   if (testimonial === null) {
-    res.status(404).json({
+    res.status(400).json({
       message:
         "Oops! we didn't find the testimonial  that you are looking for.",
     });
@@ -98,7 +100,7 @@ const deleteTestimonyById = async (req, res) => {
   const testimony = await Testimony.findOne({ where: { id: testimonyId } });
 
   if (!testimony)
-    return res.status(404).json({
+    return res.status(400).json({
       message: "Oops! we didn't find the testimony that you are looking for.",
     })
 
@@ -121,7 +123,7 @@ const deleteTestimonyById = async (req, res) => {
   if (deleted) {
     res.status(202).json({ message: "Testimony  was deleted successfully." });
   } else {
-    res.status(404).json({
+    res.status(400).json({
       message:
         "No such testimonial  was found or the Testimony  was already deleted",
     });

@@ -3,6 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Teams', [{
+      id: "f9b327e70bbcf42494ccb28b2d98e009",
       name: 'Upesh Upreti',
       designation: "CEO",
       show: true,

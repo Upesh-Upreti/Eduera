@@ -80,7 +80,8 @@ app.use("/api/v1/editor/products", require("./routes/editor/products"));
 app.use("/api/v1/editor/careers", require("./routes/editor/careers"));
 app.use("/api/v1/editor/contacts", require("./routes/editor/contacts"));
 app.use("/api/v1/editor/teams", require("./routes/editor/teams"));
-app.use("/api/v1/editor/testimonails", require("./routes/editor/testimonials"));
+app.use("/api/v1/editor/testimonials", require("./routes/editor/testimonials"));
+app.use("/api/v1/editor/enquiry", require("./routes/editor/enquiry"));
 
 //?  ------- REST ROUTES ---------
 app.get("/", (req, res) => {
@@ -92,8 +93,8 @@ app.get("/", (req, res) => {
 //For 404 handling
 app.use(errorController.get404);
 
-app.listen(4000, (req, res) => {
-  console.log("Server is up and running at port 4000.");
+app.listen(3000, (req, res) => {
+  console.log("Server is up and running at port 3000.");
 });
 
 const syncDatabase = async () => {

@@ -34,7 +34,7 @@ const changePassword = async (req, res) => {
 
   if (!findAccount)
     return res
-      .status(404)
+      .status(401)
       .json({ message: "Oops! your credentials don't match." });
 
   if (!compareSync(currentPassword, findAccount.password))
@@ -67,14 +67,14 @@ const editAccountDetails = async (req, res) => {
   //to avoid the error
   if (name === undefined)
     return res
-      .status(401)
+      .status(400)
       .json({ message: "Please atleast provide the name, role and password." });
 
   const findAccount = await Account.findOne({ where: { id: accountId } });
 
   if (findAccount === null)
     return res
-      .status(401)
+      .status(400)
       .json({ message: "Oops! no such user found with that email address" });
 
   //to delete the previously existing image, if exists
@@ -86,7 +86,7 @@ const editAccountDetails = async (req, res) => {
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   //updating the database

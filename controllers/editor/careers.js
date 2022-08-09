@@ -1,4 +1,5 @@
 const { Career } = require("../../models");
+const crypto = require("crypto")
 const fs = require("fs");
 
 const postAddCareer = async (req, res) => {
@@ -12,6 +13,7 @@ const postAddCareer = async (req, res) => {
     });
 
   const career = await Career.create({
+    id: crypto.randomBytes(16).toString("hex"),
     title: title,
     jobType: jobType,
     imageUrl: req.file ? "public/images/" + req.file.filename : "null",

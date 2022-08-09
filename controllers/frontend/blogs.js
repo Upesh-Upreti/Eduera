@@ -4,7 +4,7 @@ const getAllBlogs = async (req, res) => {
   const blog = await Blog.findAll();
 
   if (blog) return res.status(200).json(blog);
-  return res.status(404).json({ message: "Sorry! we didn't find any blog" });
+  return res.status(404).json({ message: "Sorry! we didn't find any blog" })
 };
 
 const getBlogById = async (req, res) => {

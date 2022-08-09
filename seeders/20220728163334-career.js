@@ -3,6 +3,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Careers', [{
+      id: "f9b327e70bbcf42494cdb28b2d98e00e",
       title: 'Software Developer',
       jobType: "Software",
       show: true,
