@@ -10,6 +10,9 @@ router.use(withLoggedIn);
 router.patch("/change-password", accountController.changePassword);
 
 //To change own account details by user
-router.patch("/edit-account", accountController.changePassword);
+router.patch("/edit-account", accountController.editAccountDetails);
+
+//To get own account details by user
+router.get("/account-info", accountController.accountDetails);
 
 module.exports = router;

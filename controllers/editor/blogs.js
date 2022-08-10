@@ -114,12 +114,15 @@ const deleteBlogById = async (req, res) => {
 
   const blog = await Blog.findOne({ where: { id: blogId } });
 
+  if (blog === null)
+    res.status(404).json({
+      message: "Oops! we didn't find the blog that you are looking for.",
+    });
+
+  const path = blog.imageUrl
+
   //to delete the previously existing image, if exists
-  if (blog.imageUrl) {
-    const path = "public/images/" + blog.imageUrl;
-
-    console.log("Deleting the previously existing image at " + path);
-
+  if (req.file) {
     try {
       fs.unlinkSync(path);
       //file removed

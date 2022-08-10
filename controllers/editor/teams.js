@@ -124,7 +124,7 @@ const deleteTeamMemberById = async (req, res) => {
     return res.status(404).json({ "message": "Sorry! no such team member found." })
 
   //to delete the previously existing image, if exists
-  if (team.imageUrl) {
+  if (req.file) {
     const path = team.imageUrl;
 
     try {

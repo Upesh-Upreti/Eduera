@@ -95,9 +95,15 @@ const deleteCareerById = async (req, res) => {
 
   const career = await Career.findOne({ where: { id: careerId } });
 
+  if (career === null)
+    res.status(404).json({
+      message: "Oops! we didn't find the career that you are looking for.",
+    });
+
+  const path = career.imageUrl
+
   //to delete the previously existing image, if exists
-  if (career.imageUrl) {
-    const path = career.imageUrl;
+  if (req.file) {
     try {
       fs.unlinkSync(path);
       //file removed

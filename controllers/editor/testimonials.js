@@ -105,7 +105,7 @@ const deleteTestimonyById = async (req, res) => {
     })
 
   //to delete the previously existing image, if exists
-  if (testimony.imageUrl) {
+  if (req.file) {
     const path = testimony.imageUrl;
 
     console.log("Deleting the previously existing image at " + path);

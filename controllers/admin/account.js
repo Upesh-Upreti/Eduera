@@ -47,7 +47,7 @@ const postAddAccount = async (req, res) => {
 };
 
 const getAllAccounts = async (req, res) => {
-  let accounts = await Account.findAll();
+  let accounts = await Account.findAll({ attributes: ['name', 'email', 'role', 'imageUrl'] });
 
   if (!accounts || accounts.length === 0)
     return res
@@ -63,7 +63,7 @@ const getAllAccounts = async (req, res) => {
 const getAccountById = async (req, res) => {
   const accountId = req.params.id;
 
-  let account = await Account.findOne({ where: { id: accountId } });
+  let account = await Account.findOne({ where: { id: accountId }, attributes: ['name', 'email', 'role', 'imageUrl'] });
 
   if (account === null) {
     res.status(404).json({
@@ -92,73 +92,62 @@ const editAccountById = async (req, res) => {
   //finding the account in the database
   const account = await Account.findOne({ where: { id: accountId } });
 
-  if (account.imageUrl) {
-    const path = "./file.txt";
-
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  if (account === null) {
+  if (account === null)
     res.status(404).json({
       message: "Oops! we didn't find the account that you are looking for.",
     });
-  } else {
-    //to delete the previously existing image, if exists
-    if (account.imageUrl) {
-      const path = "public/images/" + account.imageUrl;
 
-      console.log("Deleting the previously existing image at " + path);
+  const path = account.imageUrl
 
-      try {
-        fs.unlinkSync(path);
-        //file removed
-      } catch (err) {}
-    }
-
-    //updating the database
-    const update = await account.update({
-      name: name,
-      imageUrl: req.file.filename,
-      imageAlt: imageAlt,
-      show: show,
-      role: role,
-    });
-
-    //saving the updates into the database
-    const saved = await update.save();
-
-    if (saved === null) {
-      res
-        .status(500)
-        .json({ message: "Sorry we couldn't update the database." });
-    } else {
-      res
-        .status(202)
-        .json({ message: "User account was updated sucessfully." });
-    }
+  //to delete the previously existing image, if exists
+  if (req.file) {
+    try {
+      fs.unlinkSync(path);
+      //file removed
+    } catch (err) { }
   }
-};
+
+  //updating the database
+  const update = await account.update({
+    name: name,
+    imageUrl: req.file ? "public/images/" + req.file.filename : path,
+    imageAlt: imageAlt,
+    show: show,
+    role: role,
+  });
+
+  //saving the updates into the database
+  const saved = await update.save();
+
+  if (saved === null) {
+    res
+      .status(500)
+      .json({ message: "Sorry we couldn't update the database." });
+  } else {
+    res
+      .status(202)
+      .json({ message: "User account was updated sucessfully." });
+  }
+}
 
 const deleteAccountById = async (req, res) => {
   const accountId = req.params.id;
 
   const account = await Blog.findOne({ where: { id: accountId } });
 
+  if (account === null)
+    res.status(404).json({
+      message: "Oops! we didn't find the account that you are looking for.",
+    });
+
+  const path = account.imageUrl
+
   //to delete the previously existing image, if exists
-  if (account.imageUrl) {
-    const path = "public/images/" + account.imageUrl;
-
-    console.log("Deleting the previously existing image at " + path);
-
+  if (req.file) {
     try {
       fs.unlinkSync(path);
       //file removed
-    } catch (err) {}
+    } catch (err) { }
   }
 
   const deleted = await Account.destroy({ where: { id: accountId } });

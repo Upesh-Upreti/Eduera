@@ -126,7 +126,7 @@ const deleteSubProductById = async (req, res) => {
         return res.status(400).json({ message: "Sorry! no such subProduct found." });
 
     //to delete the previously existing image, if exists
-    if (subProduct.imageUrl) {
+    if (req.file) {
         const path = subProduct.imageUrl;
         console.log("Deleting the previously existing image at " + path);
 

@@ -100,7 +100,7 @@ app.listen(3000, (req, res) => {
 });
 
 const syncDatabase = async () => {
-  console.log(`Sequelize Synching message : ${await sequelize.sync()}`);
+  await sequelize.sync()
 };
 
 syncDatabase();

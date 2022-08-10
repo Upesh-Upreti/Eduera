@@ -78,8 +78,8 @@ const editAccountDetails = async (req, res) => {
       .json({ message: "Oops! no such user found with that email address" });
 
   //to delete the previously existing image, if exists
-  if (findAccount.imageUrl) {
-    const path = "public/images/" + findAccount.imageUrl;
+  if (req.file) {
+    const path = findAccount.imageUrl;
 
     console.log("Deleting the previously existing image at " + path);
 
@@ -92,7 +92,7 @@ const editAccountDetails = async (req, res) => {
   //updating the database
   const update = await account.update({
     name: name,
-    imageUrl: req.file.filename,
+    imageUrl: req.file ? "public/images/" + req.file.filename : path,
     imageAlt: imageAlt,
     show: show,
   });
@@ -107,7 +107,22 @@ const editAccountDetails = async (req, res) => {
   }
 };
 
+const accountDetails = async (req, res) => {
+  const token = req.cookies.token;
+
+  const accountId = jwt_decode(token).id;
+
+  const findAccount = await Account.findOne({ where: { id: accountId }, attributes: ['name', 'email', 'role', 'imageUrl'] });
+
+  if (findAccount === null)
+    return res
+      .status(400)
+      .json({ message: "Oops! no such user found with that email address" });
+
+  return res.status(200).json(findAccount)
+}
 module.exports = {
   changePassword,
   editAccountDetails,
+  accountDetails
 };
