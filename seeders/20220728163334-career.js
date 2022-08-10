@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('Careers', [{
+    await queryInterface.bulkInsert('careers', [{
       id: "f9b327e70bbcf42494cdb28b2d98e00e",
       title: 'Software Developer',
       jobType: "Software",
@@ -20,6 +20,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Careers', null, {});
+    await queryInterface.bulkDelete('careers', null, {});
   }
 };
