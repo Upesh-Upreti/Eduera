@@ -72,7 +72,7 @@ const editBlogById = async (req, res) => {
   const blog = await Blog.findOne({ where: { id: blogId } });
 
   if (blog === null) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Oops! we didn't find the blog member that you are looking for.",
     });
   } else {
@@ -100,7 +100,7 @@ const editBlogById = async (req, res) => {
     const saved = await update.save();
 
     if (saved === null) {
-      res
+      return res
         .status(500)
         .json({ message: "Sorry we couldn't update the database." });
     } else {
@@ -115,7 +115,7 @@ const deleteBlogById = async (req, res) => {
   const blog = await Blog.findOne({ where: { id: blogId } });
 
   if (blog === null)
-    res.status(404).json({
+    return res.status(404).json({
       message: "Oops! we didn't find the blog that you are looking for.",
     });
 

@@ -6,8 +6,8 @@ const withLoggedIn = require("../../middlewares/withLoggedIn");
 // middleware
 router.use(withLoggedIn);
 
-//To add a new enquiry.
-router.post("/add", enquiryController.postAddEnquiry);
+//To get all enquiry.
+router.get("/:id", enquiryController.getEnquiriesById);
 
 //To get all enquiry.
 router.get("/", enquiryController.getEnquiries);

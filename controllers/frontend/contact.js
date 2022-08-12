@@ -1,4 +1,5 @@
 const { Contact } = require("../../models");
+const crypto = require("crypto")
 
 const postAddContact = async (req, res) => {
   //Grabbing data from the form
@@ -17,6 +18,7 @@ const postAddContact = async (req, res) => {
     });
 
   const contact = await Contact.create({
+    id: crypto.randomBytes(16).toString("hex"),
     fullName: fullName,
     email: email,
     contactNumber: contactNumber,

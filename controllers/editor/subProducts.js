@@ -33,7 +33,7 @@ const postAddSubProduct = async (req, res) => {
         title: title,
         parentId: parentId,
         price: price,
-        imageUrl: "public/images/" + req.file.filename,
+        // imageUrl: "public/images/" + req.file.filename,
         imageAlt: imageAlt,
         show: show,
         slug: slug,

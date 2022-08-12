@@ -73,6 +73,7 @@ app.use("/api/v1/careers", require("./routes/frontend/careers"));
 app.use("/api/v1/contacts", require("./routes/frontend/contacts"));
 app.use("/api/v1/teams", require("./routes/frontend/teams"));
 app.use("/api/v1/testimonials", require("./routes/frontend/testimonials"));
+app.use("/api/v1/enquiry", require("./routes/frontend/enquiry"));
 
 //? ------- EDITOR ROUTES ---------
 app.use("/api/v1/editor/account", require("./routes/editor/account"));

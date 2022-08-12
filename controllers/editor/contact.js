@@ -11,7 +11,8 @@ const getAllContacts = async (req, res) => {
 };
 
 const getContactById = async (req, res) => {
-  const contact = await Contact.findAll();
+  const contactId = req.params.id
+  const contact = await Contact.findOne({ where: { id: contactId } });
 
   if (contact) return res.status(200).json(contact);
 
