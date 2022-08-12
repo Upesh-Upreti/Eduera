@@ -125,16 +125,14 @@ const deleteSubProductById = async (req, res) => {
     if (!subProduct)
         return res.status(400).json({ message: "Sorry! no such subProduct found." });
 
-    //to delete the previously existing image, if exists
-    if (req.file) {
-        const path = subProduct.imageUrl;
-        console.log("Deleting the previously existing image at " + path);
+    const path = subProduct.imageUrl;
+    console.log("Deleting the previously existing image at " + path);
 
-        try {
-            fs.unlinkSync(path);
-            //file removed
-        } catch (err) { }
-    }
+    try {
+        fs.unlinkSync(path);
+        //file removed
+    } catch (err) { }
+
 
     const deleted = await SubProducts.destroy({ where: { id: subProductId } });
 

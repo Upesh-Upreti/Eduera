@@ -122,12 +122,10 @@ const deleteBlogById = async (req, res) => {
   const path = blog.imageUrl
 
   //to delete the previously existing image, if exists
-  if (req.file) {
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) { }
-  }
+  try {
+    fs.unlinkSync(path);
+    //file removed
+  } catch (err) { }
 
   const deleted = await Blog.destroy({ where: { id: blogId } });
 

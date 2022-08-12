@@ -127,15 +127,13 @@ const deleteProductById = async (req, res) => {
     return res.status(400).json({ message: "Sorry! no such product found." });
 
   //to delete the previously existing image, if exists
-  if (req.file) {
-    const path = product.imageUrl;
-    console.log("Deleting the previously existing image at " + path);
+  const path = product.imageUrl;
+  console.log("Deleting the previously existing image at " + path);
 
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) { }
-  }
+  try {
+    fs.unlinkSync(path);
+    //file removed
+  } catch (err) { }
 
   const deleted = await Product.destroy({ where: { id: productId } });
 

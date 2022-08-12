@@ -73,7 +73,7 @@ app.use("/api/v1/careers", require("./routes/frontend/careers"));
 app.use("/api/v1/contacts", require("./routes/frontend/contacts"));
 app.use("/api/v1/teams", require("./routes/frontend/teams"));
 app.use("/api/v1/testimonials", require("./routes/frontend/testimonials"));
-app.use("/api/v1/enquiry", require("./routes/frontend/enquiry"));
+app.use("/api/v1/subscription", require("./routes/frontend/subscription"));
 
 //? ------- EDITOR ROUTES ---------
 app.use("/api/v1/editor/account", require("./routes/editor/account"));
@@ -84,7 +84,7 @@ app.use("/api/v1/editor/careers", require("./routes/editor/careers"));
 app.use("/api/v1/editor/contacts", require("./routes/editor/contacts"));
 app.use("/api/v1/editor/teams", require("./routes/editor/teams"));
 app.use("/api/v1/editor/testimonials", require("./routes/editor/testimonials"));
-app.use("/api/v1/editor/enquiry", require("./routes/editor/enquiry"));
+app.use("/api/v1/editor/subscription", require("./routes/editor/subscription"));
 
 //?  ------- REST ROUTES ---------
 app.get("/", (req, res) => {

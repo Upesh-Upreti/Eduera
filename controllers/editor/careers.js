@@ -103,12 +103,10 @@ const deleteCareerById = async (req, res) => {
   const path = career.imageUrl
 
   //to delete the previously existing image, if exists
-  if (req.file) {
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) { }
-  }
+  try {
+    fs.unlinkSync(path);
+    //file removed
+  } catch (err) { }
 
   const deleted = await Career.destroy({ where: { id: careerId } });
 
