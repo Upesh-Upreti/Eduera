@@ -1,7 +1,7 @@
-const { Contact } = require("../../models");
+const { Enquiry } = require("../../models");
 const crypto = require("crypto")
 
-const postAddContact = async (req, res) => {
+const postAddEnquiry = async (req, res) => {
   //Grabbing data from the form
   const { fullName, email, contactNumber, message } = req.body;
 
@@ -17,21 +17,23 @@ const postAddContact = async (req, res) => {
         "Please atleast provide the fullname, email, contactNumber and message.",
     });
 
-  const contact = await Contact.create({
+
+  const enquiry = await Enquiry.create({
     id: crypto.randomBytes(16).toString("hex"),
     fullName: fullName,
     email: email,
+    imageUrl: req.file ? "images/" + req.file.filename : null,
     contactNumber: contactNumber,
     message: message,
   });
 
-  if (contact) {
-    res.status(202).json({ message: "Contact message was sent successfully." });
+  if (enquiry) {
+    res.status(202).json({ message: "Enquiry message was sent successfully." });
   } else {
-    res.status(500).json({ message: "Sorry! Contact message isn't added" });
+    res.status(500).json({ message: "Sorry! Enquiry message isn't added" });
   }
 };
 
 module.exports = {
-  postAddContact,
+  postAddEnquiry,
 };

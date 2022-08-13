@@ -9,6 +9,7 @@ const postAddTeamMember = async (req, res) => {
     designation,
     imageAlt,
     show,
+    email,
     orderNumber,
     facebookLink,
     instagramLink,
@@ -16,19 +17,21 @@ const postAddTeamMember = async (req, res) => {
     linkedinLink,
   } = req.body;
 
+
   //to avoid the error
-  if (name === undefined || designation === undefined || req.file === undefined)
+  if (name === undefined || designation === undefined || !req.file)
     return res.status(400).json({
       message: "Please atleast provide the name, designation and image.",
-    });
+    })
 
   const team = await Team.create({
     id: crypto.randomBytes(16).toString("hex"),
     name: name,
     designation: designation,
     orderNumber: orderNumber,
-    imageUrl: "public/images/" + req.file.filename,
+    imageUrl: "images/" + req.file.filename,
     imageAlt: imageAlt,
+    email: email,
     show: show,
     facebookLink: facebookLink,
     instagramLink: instagramLink,
@@ -53,6 +56,7 @@ const editTeamMemberById = async (req, res) => {
     designation,
     imageAlt,
     show,
+    email,
     orderNumber,
     facebookLink,
     instagramLink,
@@ -64,9 +68,7 @@ const editTeamMemberById = async (req, res) => {
   //to avoid the error
   if (
     name === undefined ||
-    name === "" ||
-    designation === undefined ||
-    designation === ""
+    designation === undefined
   )
     return res.status(400).json({
       message: "Please atleast provide the name and designation",
@@ -81,7 +83,7 @@ const editTeamMemberById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = team.imageUrl;
+    const path = "public/" + team.imageUrl;
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -93,9 +95,10 @@ const editTeamMemberById = async (req, res) => {
       name: name,
       designation: designation,
       orderNumber: orderNumber,
-      imageUrl: req.file ? "public/images/" + req.file.filename : path,
+      imageUrl: req.file ? "images/" + req.file.filename : team.imageUrl,
       imageAlt: imageAlt,
       show: show,
+      email: email,
       facebookLink: facebookLink,
       instagramLink: instagramLink,
       twitterLink: twitterLink,
@@ -124,7 +127,7 @@ const deleteTeamMemberById = async (req, res) => {
     return res.status(404).json({ "message": "Sorry! no such team member found." })
 
   //to delete the previously existing image, if exists
-  const path = team.imageUrl;
+  const path = "public/" + team.imageUrl;
 
   try {
     fs.unlinkSync(path);

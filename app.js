@@ -7,7 +7,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://eduera.net"],
     credentials: true,
   })
 );
@@ -70,7 +70,7 @@ app.use("/api/v1/blogs", require("./routes/frontend/blogs"));
 app.use("/api/v1/products", require("./routes/frontend/products"));
 app.use("/api/v1/subproducts", require("./routes/frontend/subProducts"));
 app.use("/api/v1/careers", require("./routes/frontend/careers"));
-app.use("/api/v1/contacts", require("./routes/frontend/contacts"));
+app.use("/api/v1/enquiries", require("./routes/frontend/enquiry"));
 app.use("/api/v1/teams", require("./routes/frontend/teams"));
 app.use("/api/v1/testimonials", require("./routes/frontend/testimonials"));
 app.use("/api/v1/subscription", require("./routes/frontend/subscription"));
@@ -81,7 +81,7 @@ app.use("/api/v1/editor/blogs", require("./routes/editor/blogs"));
 app.use("/api/v1/editor/products", require("./routes/editor/products"));
 app.use("/api/v1/editor/subproducts", require("./routes/editor/subProducts"));
 app.use("/api/v1/editor/careers", require("./routes/editor/careers"));
-app.use("/api/v1/editor/contacts", require("./routes/editor/contacts"));
+app.use("/api/v1/editor/enquiries", require("./routes/editor/enquiry"));
 app.use("/api/v1/editor/teams", require("./routes/editor/teams"));
 app.use("/api/v1/editor/testimonials", require("./routes/editor/testimonials"));
 app.use("/api/v1/editor/subscription", require("./routes/editor/subscription"));

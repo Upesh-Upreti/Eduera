@@ -2,6 +2,7 @@ const { Account } = require("../../models/");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const jwt_decode = require("jwt-decode");
+const crypto = require("crypto")
 const fs = require("fs");
 
 const postAddAccount = async (req, res) => {
@@ -30,9 +31,10 @@ const postAddAccount = async (req, res) => {
     });
 
   const account = await Account.create({
+    id: crypto.randomBytes(16).toString("hex"),
     name: name,
     email: email.toLowerCase(),
-    imageUrl: req?.file?.filename ?? "",
+    imageUrl: req.file ? "images/" + req.file.filename : null,
     imageAlt: imageAlt,
     show: show,
     role: role,
@@ -47,7 +49,7 @@ const postAddAccount = async (req, res) => {
 };
 
 const getAllAccounts = async (req, res) => {
-  let accounts = await Account.findAll({ attributes: ['name', 'email', 'role', 'imageUrl'] });
+  let accounts = await Account.findAll({ attributes: ['id', 'name', 'email', 'role', 'imageUrl'] });
 
   if (!accounts || accounts.length === 0)
     return res
@@ -63,7 +65,7 @@ const getAllAccounts = async (req, res) => {
 const getAccountById = async (req, res) => {
   const accountId = req.params.id;
 
-  let account = await Account.findOne({ where: { id: accountId }, attributes: ['name', 'email', 'role', 'imageUrl'] });
+  let account = await Account.findOne({ where: { id: accountId }, attributes: ['id', 'name', 'email', 'role', 'imageUrl'] });
 
   if (account === null) {
     res.status(404).json({
@@ -93,7 +95,7 @@ const editAccountById = async (req, res) => {
   const account = await Account.findOne({ where: { id: accountId } });
 
   if (account === null)
-    res.status(404).json({
+    return res.status(404).json({
       message: "Oops! we didn't find the account that you are looking for.",
     });
 
@@ -110,7 +112,7 @@ const editAccountById = async (req, res) => {
   //updating the database
   const update = await account.update({
     name: name,
-    imageUrl: req.file ? "public/images/" + req.file.filename : path,
+    imageUrl: req.file ? "images/" + req.file.filename : path,
     imageAlt: imageAlt,
     show: show,
     role: role,
@@ -133,7 +135,7 @@ const editAccountById = async (req, res) => {
 const deleteAccountById = async (req, res) => {
   const accountId = req.params.id;
 
-  const account = await Blog.findOne({ where: { id: accountId } });
+  const account = await Account.findOne({ where: { id: accountId } });
 
   if (account === null)
     res.status(404).json({

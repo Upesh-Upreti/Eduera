@@ -1,5 +1,6 @@
 const { Blog } = require("../../models");
 const crypto = require("crypto")
+const fs = require("fs")
 
 const postAddBlog = async (req, res) => {
   //Grabbing data from the form
@@ -13,21 +14,17 @@ const postAddBlog = async (req, res) => {
     longDescription,
   } = req.body;
   //to avoid the error
-  if (
-    title === undefined ||
-    shortDescription === undefined ||
-    longDescription === undefined ||
-    req.file === null
-  )
+  if (title === undefined || shortDescription === undefined || longDescription === undefined || !req.file)
     return res.status(401).json({
       message:
         "Please atleast provide the title, image, short description and long descriptio.",
-    });
+    })
+
   const blog = await Blog.create({
     id: crypto.randomBytes(16).toString("hex"),
     title: title,
     category: category,
-    imageUrl: "public/images/" + req.file.filename,
+    imageUrl: req.file ? "images/" + req.file.filename : null,
     imageAlt: imageAlt,
     show: show,
     slug: slug,
@@ -40,7 +37,7 @@ const postAddBlog = async (req, res) => {
   } else {
     res.status(500).json({ message: "Sorry! blog isn't added" });
   }
-};
+}
 
 const editBlogById = async (req, res) => {
   //Blog member id
@@ -77,7 +74,7 @@ const editBlogById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = blog.imageUrl
+    const path = "public/" + blog.imageUrl
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -88,7 +85,7 @@ const editBlogById = async (req, res) => {
     const update = await blog.update({
       title: title,
       category: category,
-      imageUrl: req.file ? "public/images/" + req.file.filename : path,
+      imageUrl: req.file ? "images/" + req.file.filename : blog.imageUrl,
       imageAlt: imageAlt,
       show: show,
       slug: slug,
@@ -119,7 +116,7 @@ const deleteBlogById = async (req, res) => {
       message: "Oops! we didn't find the blog that you are looking for.",
     });
 
-  const path = blog.imageUrl
+  const path = "public/" + blog.imageUrl
 
   //to delete the previously existing image, if exists
   try {

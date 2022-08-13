@@ -11,6 +11,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      numberOfVancies: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
       jobType: {
         type: Sequelize.STRING,
         allowNull: true

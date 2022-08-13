@@ -8,6 +8,7 @@ module.exports = {
       jobType: "Software",
       show: true,
       salary: 50000,
+      numberOfVancies: 4,
       imageUrl: "https://eduera.net/uploads/images/service/7ea6dcb47308f226cfaa3995dc42fb0e1654580000.jpg",
       imageAlt: "Medisys",
       shortDescription: "Happyness is a state of mind.",

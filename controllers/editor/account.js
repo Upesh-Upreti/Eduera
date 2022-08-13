@@ -92,7 +92,7 @@ const editAccountDetails = async (req, res) => {
   //updating the database
   const update = await account.update({
     name: name,
-    imageUrl: req.file ? "public/images/" + req.file.filename : path,
+    imageUrl: req.file ? "images/" + req.file.filename : findAccount.imageUrl,
     imageAlt: imageAlt,
     show: show,
   });

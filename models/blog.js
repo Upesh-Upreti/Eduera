@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     show: DataTypes.BOOLEAN,
     slug: DataTypes.STRING,
     shortDescription: DataTypes.TEXT,
+    longDescription: DataTypes.TEXT,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   }, {

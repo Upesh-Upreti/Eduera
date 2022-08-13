@@ -14,7 +14,7 @@ const postAddSubscription = async (req, res) => {
     } = req.body;
 
     //to avoid the error
-    if (name === undefined || phoneNumber === undefined || req.file === null)
+    if (name === undefined || phoneNumber === undefined)
         return res.status(400).json({
             message: "Please atleast provide the name, payment image and phone number.",
         });
@@ -24,7 +24,7 @@ const postAddSubscription = async (req, res) => {
         name: name,
         phoneNumber: phoneNumber,
         email: email,
-        imageUrl: "public/images/" + req.file.filename,
+        imageUrl: req.file ? "images/" + req.file.filename : null,
         amount: amount,
         paymentToken: paymentToken,
         product: product,

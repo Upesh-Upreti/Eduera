@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   Career.init({
     title: DataTypes.STRING,
     jobType: DataTypes.STRING,
+    numberOfVancies: DataTypes.INTEGER,
     imageUrl: DataTypes.STRING,
     imageAlt: DataTypes.STRING,
     show: DataTypes.BOOLEAN,

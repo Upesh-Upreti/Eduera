@@ -36,12 +36,12 @@ const deleteSubscriptionById = async (req, res) => {
     if (!subscription)
         return res.status(404).json({ "message": "Sorry! no such subscription found." })
 
-    const path = subscription.imageUrl
+    const path = "public/" + subscription.imageUrl
 
     try {
         fs.unlinkSync(path);
         //file removed
-    } catch (err) { }
+    } catch (err) { console.log(err); }
 
 
     const deleted = await Subscription.destroy({ where: { id: subscriptionId } });
