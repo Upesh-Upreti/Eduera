@@ -17,6 +17,7 @@ const postAddEnquiry = async (req, res) => {
         "Please atleast provide the fullname, email, contactNumber and message.",
     });
 
+  console.log("name of the image" + req.file.filename);
 
   const enquiry = await Enquiry.create({
     id: crypto.randomBytes(16).toString("hex"),
