@@ -32,7 +32,7 @@ const postAddProduct = async (req, res) => {
     title: title,
     category: category,
     price: price,
-    imageUrl: "images/" + req.file.filename,
+    imageUrl: process.env.BASE_URL + "images/" + req.file.filename,
     imageAlt: imageAlt,
     show: show,
     slug: slug,
@@ -85,7 +85,7 @@ const editProductById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + product.imageUrl;
+    const path = "public/" + product.imageUrl.slice(process.env.BASE_URL.length, product.imageUrl.length)
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -97,7 +97,7 @@ const editProductById = async (req, res) => {
       title: title,
       category: category,
       price: price,
-      imageUrl: req.file ? "images/" + req.file.filename : product.imageUrl,
+      imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : product.imageUrl,
       imageAlt: imageAlt,
       show: show,
       slug: slug,
@@ -127,7 +127,7 @@ const deleteProductById = async (req, res) => {
     return res.status(400).json({ message: "Sorry! no such product found." });
 
   //to delete the previously existing image, if exists
-  const path = "public/" + product.imageUrl;
+  const path = "public/" + product.imageUrl.slice(process.env.BASE_URL.length, product.imageUrl.length)
 
   try {
     fs.unlinkSync(path);

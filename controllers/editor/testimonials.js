@@ -22,7 +22,7 @@ const postAddTestimony = async (req, res) => {
     id: crypto.randomBytes(16).toString("hex"),
     name: name,
     designation: designation,
-    imageUrl: "images/" + req.file.filename,
+    imageUrl: process.env.BASE_URL + "images/" + req.file.filename,
     imageAlt: imageAlt,
     show: show,
     testimony: testimony,
@@ -63,7 +63,7 @@ const editTestimonyById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + testimonial.imageUrl;
+    const path = "public/" + testimonial.imageUrl.slice(process.env.BASE_URL.length, testimonial.imageUrl.length)
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -75,7 +75,7 @@ const editTestimonyById = async (req, res) => {
     //updating the database
     const update = await testimonial.update({
       name: name,
-      imageUrl: req.file ? "images" + req.file.filename : testimonial.imageUrl,
+      imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : testimonial.imageUrl,
       imageAlt: imageAlt,
       show: show,
       testimony: testimony,
@@ -105,7 +105,7 @@ const deleteTestimonyById = async (req, res) => {
     })
 
   //to delete the previously existing image, if exists
-  const path = "public/" + testimony.imageUrl;
+  const path = "public/" + testimony.imageUrl.slice(process.env.BASE_URL.length, testimony.imageUrl.length)
 
   console.log("Deleting the previously existing image at " + path);
 

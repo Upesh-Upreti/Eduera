@@ -36,7 +36,7 @@ const deleteSubscriptionById = async (req, res) => {
     if (!subscription)
         return res.status(404).json({ "message": "Sorry! no such subscription found." })
 
-    const path = "public/" + subscription.imageUrl
+    const path = "public/" + subscription.imageUrl.slice(process.env.BASE_URL.length, subscription.imageUrl.length)
 
     try {
         fs.unlinkSync(path);

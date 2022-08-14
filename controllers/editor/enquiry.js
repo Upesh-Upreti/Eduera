@@ -30,7 +30,7 @@ const deleteEnquiryById = async (req, res) => {
   if (!enquiry)
     return res.status(404).json({ "message": "No such enquiry found." })
 
-  const path = "public/" + enquiry.imageUrl
+  const path = "public/" + enquiry.imageUrl.slice(process.env.BASE_URL.length, enquiry.imageUrl.length)
 
   //to delete the previously existing image, if exists
   try {

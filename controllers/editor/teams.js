@@ -29,7 +29,7 @@ const postAddTeamMember = async (req, res) => {
     name: name,
     designation: designation,
     orderNumber: orderNumber,
-    imageUrl: "images/" + req.file.filename,
+    imageUrl: process.env.BASE_URL + "images/" + req.file.filename,
     imageAlt: imageAlt,
     email: email,
     show: show,
@@ -83,7 +83,7 @@ const editTeamMemberById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + team.imageUrl;
+    const path = "public/" + team.imageUrl.slice(process.env.BASE_URL.length, team.imageUrl.length)
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -95,7 +95,7 @@ const editTeamMemberById = async (req, res) => {
       name: name,
       designation: designation,
       orderNumber: orderNumber,
-      imageUrl: req.file ? "images/" + req.file.filename : team.imageUrl,
+      imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : team.imageUrl,
       imageAlt: imageAlt,
       show: show,
       email: email,
@@ -127,7 +127,7 @@ const deleteTeamMemberById = async (req, res) => {
     return res.status(404).json({ "message": "Sorry! no such team member found." })
 
   //to delete the previously existing image, if exists
-  const path = "public/" + team.imageUrl;
+  const path = "public/" + team.imageUrl.slice(process.env.BASE_URL.length, team.imageUrl.length)
 
   try {
     fs.unlinkSync(path);

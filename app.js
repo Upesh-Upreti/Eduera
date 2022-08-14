@@ -7,7 +7,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001", "https://eduera.net"],
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://localhost:3000", "https://localhost:3001", "https://eduera.net"],
     credentials: true,
   })
 );
@@ -52,12 +52,6 @@ const errorController = require("./controllers/error");
 //Database
 const sequelize = require("./util/database");
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.setHeader("Access-Control-Allow-Credentials", true);
-
-  next();
-});
 //? :::::::------ ROUTES -----::::::::::
 //?  ------- AUTH ROUTES ---------
 app.use("/api/v1/auth", require("./routes/auth"));

@@ -24,7 +24,7 @@ const postAddSubscription = async (req, res) => {
         name: name,
         phoneNumber: phoneNumber,
         email: email,
-        imageUrl: req.file ? "images/" + req.file.filename : null,
+        imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : null,
         amount: amount,
         paymentToken: paymentToken,
         product: product,

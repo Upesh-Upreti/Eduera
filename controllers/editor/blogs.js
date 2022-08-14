@@ -24,7 +24,7 @@ const postAddBlog = async (req, res) => {
     id: crypto.randomBytes(16).toString("hex"),
     title: title,
     category: category,
-    imageUrl: req.file ? "images/" + req.file.filename : null,
+    imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : null,
     imageAlt: imageAlt,
     show: show,
     slug: slug,
@@ -74,7 +74,7 @@ const editBlogById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + blog.imageUrl
+    const path = "public/" + blog.imageUrl.slice(process.env.BASE_URL.length, blog.imageUrl.length)
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -85,7 +85,7 @@ const editBlogById = async (req, res) => {
     const update = await blog.update({
       title: title,
       category: category,
-      imageUrl: req.file ? "images/" + req.file.filename : blog.imageUrl,
+      imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : blog.imageUrl,
       imageAlt: imageAlt,
       show: show,
       slug: slug,
@@ -116,7 +116,7 @@ const deleteBlogById = async (req, res) => {
       message: "Oops! we didn't find the blog that you are looking for.",
     });
 
-  const path = "public/" + blog.imageUrl
+  const path = "public/" + blog.imageUrl.slice(process.env.BASE_URL.length, blog.imageUrl.length)
 
   //to delete the previously existing image, if exists
   try {

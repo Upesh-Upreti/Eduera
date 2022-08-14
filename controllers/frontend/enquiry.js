@@ -23,7 +23,7 @@ const postAddEnquiry = async (req, res) => {
     id: crypto.randomBytes(16).toString("hex"),
     fullName: fullName,
     email: email,
-    imageUrl: req.file ? "images/" + req.file.filename : null,
+    imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : null,
     contactNumber: contactNumber,
     message: message,
   });

@@ -33,7 +33,7 @@ const postAddSubProduct = async (req, res) => {
         title: title,
         parentId: parentId,
         price: price,
-        imageUrl: req.file ? "images/" + req.file.filename : null,
+        imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : null,
         imageAlt: imageAlt,
         show: show,
         slug: slug,
@@ -84,7 +84,7 @@ const editSubProductById = async (req, res) => {
         });
     } else {
         //to delete the previously existing image, if exists
-        const path = "public/" + subProduct.imageUrl;
+        const path = "public/" + subProduct.imageUrl.slice(process.env.BASE_URL.length, subProduct.imageUrl.length)
         if (req.file) {
             try {
                 fs.unlinkSync(path);
@@ -96,7 +96,7 @@ const editSubProductById = async (req, res) => {
             title: title,
             category: category,
             price: price,
-            imageUrl: req.file ? "images/" + req.file.filename : subProduct.imageUrl,
+            imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : subProduct.imageUrl,
             imageAlt: imageAlt,
             show: show,
             slug: slug,
@@ -125,7 +125,7 @@ const deleteSubProductById = async (req, res) => {
     if (!subProduct)
         return res.status(400).json({ message: "Sorry! no such subProduct found." });
 
-    const path = "public/" + subProduct.imageUrl;
+    const path = "public/" + subProduct.imageUrl.slice(process.env.BASE_URL.length, subProduct.imageUrl.length)
     console.log("Deleting the previously existing image at " + path);
 
     try {

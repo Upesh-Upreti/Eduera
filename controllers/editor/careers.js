@@ -16,7 +16,7 @@ const postAddCareer = async (req, res) => {
     id: crypto.randomBytes(16).toString("hex"),
     title: title,
     jobType: jobType,
-    imageUrl: req.file ? "images/" + req.file.filename : null,
+    imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : null,
     imageAlt: imageAlt,
     show: show,
     shortDescription: shortDescription,
@@ -58,7 +58,7 @@ const editCareerById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = career.imageUrl;
+    const path = "public/" + career.imageUrl.slice(process.env.BASE_URL.length, career.imageUrl.length)
     if (req.file) {
       try {
         fs.unlinkSync(path);
@@ -70,7 +70,7 @@ const editCareerById = async (req, res) => {
     const update = await career.update({
       title: title,
       jobType: jobType,
-      imageUrl: req.file ? "images/" + req.file.filename : career.imageUrl,
+      imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : career.imageUrl,
       imageAlt: imageAlt,
       show: show,
       shortDescription: shortDescription,
@@ -100,7 +100,7 @@ const deleteCareerById = async (req, res) => {
       message: "Oops! we didn't find the career that you are looking for.",
     });
 
-  const path = "public" + career.imageUrl
+  const path = "public/" + career.imageUrl.slice(process.env.BASE_URL.length, career.imageUrl.length)
 
   //to delete the previously existing image, if exists
   try {

@@ -36,6 +36,7 @@ const postLogin = async (req, res) => {
   res.cookie("token", jsonToken, {
     expires: new Date(Date.now() + 86400000),
     httpOnly: true,
+    sameSite: "None",
   });
 
   res.status(200).json({ message: "Login was sucessful" });
@@ -45,6 +46,7 @@ const deleteLogout = async (req, res) => {
   res.cookie("token", "", {
     expires: new Date(Date.now() - 86400000),
     httpOnly: true,
+    sameSite: "None",
   });
   res.status(202).json({ message: "Logout was sucessful" });
 };

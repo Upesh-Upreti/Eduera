@@ -79,7 +79,7 @@ const editAccountDetails = async (req, res) => {
 
   //to delete the previously existing image, if exists
   if (req.file) {
-    const path = findAccount.imageUrl;
+    const path = "public/" + findAccount.imageUrl.slice(process.env.BASE_URL.length, findAccount.imageUrl.length)
 
     console.log("Deleting the previously existing image at " + path);
 
@@ -92,7 +92,7 @@ const editAccountDetails = async (req, res) => {
   //updating the database
   const update = await account.update({
     name: name,
-    imageUrl: req.file ? "images/" + req.file.filename : findAccount.imageUrl,
+    imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : findAccount.imageUrl,
     imageAlt: imageAlt,
     show: show,
   });
