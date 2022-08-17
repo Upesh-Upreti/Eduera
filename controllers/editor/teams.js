@@ -83,12 +83,14 @@ const editTeamMemberById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + team.imageUrl.slice(process.env.BASE_URL.length, team.imageUrl.length)
-    if (req.file) {
-      try {
-        fs.unlinkSync(path);
-        //file removed
-      } catch (err) { }
+    if (team.imageUrl !== null) {
+      const path = "public/" + team.imageUrl.slice(process.env.BASE_URL.length, team.imageUrl.length)
+      if (req.file) {
+        try {
+          fs.unlinkSync(path);
+          //file removed
+        } catch (err) { }
+      }
     }
     //updating the database
     const update = await team.update({
@@ -127,13 +129,14 @@ const deleteTeamMemberById = async (req, res) => {
     return res.status(404).json({ "message": "Sorry! no such team member found." })
 
   //to delete the previously existing image, if exists
-  const path = "public/" + team.imageUrl.slice(process.env.BASE_URL.length, team.imageUrl.length)
+  if (team.imageUrl !== null) {
+    const path = "public/" + team.imageUrl.slice(process.env.BASE_URL.length, team.imageUrl.length)
 
-  try {
-    fs.unlinkSync(path);
-    //file removed
-  } catch (err) { }
-
+    try {
+      fs.unlinkSync(path);
+      //file removed
+    } catch (err) { }
+  }
   const deleted = await Team.destroy({ where: { id: teamId } });
 
   if (deleted) {

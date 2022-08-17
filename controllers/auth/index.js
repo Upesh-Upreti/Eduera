@@ -31,15 +31,13 @@ const postLogin = async (req, res) => {
     }
   );
 
-  console.log(jsonToken);
-
   res.cookie("token", jsonToken, {
     expires: new Date(Date.now() + 86400000),
     httpOnly: true,
     sameSite: "None",
   });
 
-  res.status(200).json({ message: "Login was sucessful" });
+  res.status(200).json({ message: "Login was sucessful", token: jsonToken });
 };
 
 const deleteLogout = async (req, res) => {

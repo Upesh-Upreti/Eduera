@@ -34,7 +34,7 @@ const postAddAccount = async (req, res) => {
     id: crypto.randomBytes(16).toString("hex"),
     name: name,
     email: email.toLowerCase(),
-    imageUrl: req.file ? "images/" + req.file.filename : null,
+    imageUrl: req.file ? process.env.BASE_URL + "images/" + req.file.filename : nulll,
     imageAlt: imageAlt,
     show: show,
     role: role,
@@ -98,15 +98,18 @@ const editAccountById = async (req, res) => {
     return res.status(404).json({
       message: "Oops! we didn't find the account that you are looking for.",
     });
+  if (account.imageUrl !== null) {
+    const path = "public/" + account.imageUrl.slice(process.env.BASE_URL.length, account.imageUrl.length)
 
-  const path = account.imageUrl
-
-  //to delete the previously existing image, if exists
-  if (req.file) {
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) { }
+    //to delete the previously existing image, if exists
+    if (account.imageUrl !== null) {
+      if (req.file) {
+        try {
+          fs.unlinkSync(path);
+          //file removed
+        } catch (err) { }
+      }
+    }
   }
 
   //updating the database
@@ -138,14 +141,12 @@ const deleteAccountById = async (req, res) => {
   const account = await Account.findOne({ where: { id: accountId } });
 
   if (account === null)
-    res.status(404).json({
+    return res.status(404).json({
       message: "Oops! we didn't find the account that you are looking for.",
     });
 
-  const path = account.imageUrl
-
   //to delete the previously existing image, if exists
-  if (req.file) {
+  if (account.imageUrl !== null) {
     try {
       fs.unlinkSync(path);
       //file removed

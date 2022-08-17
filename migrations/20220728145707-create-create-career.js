@@ -12,7 +12,7 @@ module.exports = {
         allowNull: true
       },
       numberOfVancies: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true
       },
       jobType: {
@@ -37,11 +37,11 @@ module.exports = {
         defaultValue: true,
       },
       startDate: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: true
       },
       endDate: {
-        type: Sequelize.DATE,
+        type: Sequelize.STRING,
         allowNull: true
       },
       shortDescription: {

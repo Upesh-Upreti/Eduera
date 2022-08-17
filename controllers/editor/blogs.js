@@ -74,12 +74,14 @@ const editBlogById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + blog.imageUrl.slice(process.env.BASE_URL.length, blog.imageUrl.length)
-    if (req.file) {
-      try {
-        fs.unlinkSync(path);
-        //file removed
-      } catch (err) { }
+    if (blog.imageUrl !== null) {
+      const path = "public/" + blog.imageUrl.slice(process.env.BASE_URL.length, blog.imageUrl.length)
+      if (req.file) {
+        try {
+          fs.unlinkSync(path);
+          //file removed
+        } catch (err) { }
+      }
     }
     //updating the database
     const update = await blog.update({
@@ -116,13 +118,15 @@ const deleteBlogById = async (req, res) => {
       message: "Oops! we didn't find the blog that you are looking for.",
     });
 
-  const path = "public/" + blog.imageUrl.slice(process.env.BASE_URL.length, blog.imageUrl.length)
+  if (blog.imageUrl !== null) {
+    const path = "public/" + blog.imageUrl.slice(process.env.BASE_URL.length, blog.imageUrl.length)
 
-  //to delete the previously existing image, if exists
-  try {
-    fs.unlinkSync(path);
-    //file removed
-  } catch (err) { }
+    //to delete the previously existing image, if exists
+    try {
+      fs.unlinkSync(path);
+      //file removed
+    } catch (err) { }
+  }
 
   const deleted = await Blog.destroy({ where: { id: blogId } });
 

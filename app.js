@@ -9,6 +9,8 @@ app.use(
   cors({
     origin: ["http://localhost:3000", "http://localhost:3001", "https://localhost:3000", "https://localhost:3001", "https://eduera.net"],
     credentials: true,
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    preflightContinue: false,
   })
 );
 

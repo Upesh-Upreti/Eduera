@@ -1,6 +1,6 @@
 const jwt_decode = require("jwt-decode");
 const withAdmin = async (req, res, next) => {
-  let token = req.cookies.token;
+  let token = req.headers['token'];
 
   const payLoad = jwt_decode(token);
 

@@ -84,13 +84,16 @@ const editSubProductById = async (req, res) => {
         });
     } else {
         //to delete the previously existing image, if exists
-        const path = "public/" + subProduct.imageUrl.slice(process.env.BASE_URL.length, subProduct.imageUrl.length)
-        if (req.file) {
-            try {
-                fs.unlinkSync(path);
-                //file removed
-            } catch (err) { }
+        if (subProduct.imageUrl !== null) {
+            const path = "public/" + subProduct.imageUrl.slice(process.env.BASE_URL.length, subProduct.imageUrl.length)
+            if (req.file) {
+                try {
+                    fs.unlinkSync(path);
+                    //file removed
+                } catch (err) { }
+            }
         }
+
         //updating the database
         const update = await subProduct.update({
             title: title,
@@ -125,14 +128,15 @@ const deleteSubProductById = async (req, res) => {
     if (!subProduct)
         return res.status(400).json({ message: "Sorry! no such subProduct found." });
 
-    const path = "public/" + subProduct.imageUrl.slice(process.env.BASE_URL.length, subProduct.imageUrl.length)
-    console.log("Deleting the previously existing image at " + path);
+    if (subProduct.imageUrl !== null) {
+        const path = "public/" + subProduct.imageUrl.slice(process.env.BASE_URL.length, subProduct.imageUrl.length)
 
-    try {
-        fs.unlinkSync(path);
-        //file removed
-    } catch (err) { }
+        try {
+            fs.unlinkSync(path);
+            //file removed
+        } catch (err) { }
 
+    }
 
     const deleted = await SubProducts.destroy({ where: { id: subProductId } });
 

@@ -51,8 +51,6 @@ const editProductById = async (req, res) => {
   //product id
   const productId = req.params.id;
 
-  console.log(productId);
-
   //Grabbing data from the form
   const {
     title,
@@ -85,12 +83,14 @@ const editProductById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + product.imageUrl.slice(process.env.BASE_URL.length, product.imageUrl.length)
-    if (req.file) {
-      try {
-        fs.unlinkSync(path);
-        //file removed
-      } catch (err) { }
+    if (product.imageUrl !== null) {
+      const path = "public/" + product.imageUrl.slice(process.env.BASE_URL.length, product.imageUrl.length)
+      if (req.file) {
+        try {
+          fs.unlinkSync(path);
+          //file removed
+        } catch (err) { }
+      }
     }
     //updating the database
     const update = await product.update({
@@ -127,13 +127,15 @@ const deleteProductById = async (req, res) => {
     return res.status(400).json({ message: "Sorry! no such product found." });
 
   //to delete the previously existing image, if exists
-  const path = "public/" + product.imageUrl.slice(process.env.BASE_URL.length, product.imageUrl.length)
 
-  try {
-    fs.unlinkSync(path);
-    //file removed
-  } catch (err) { }
+  if (product.imageUrl !== null) {
+    const path = "public/" + product.imageUrl.slice(process.env.BASE_URL.length, product.imageUrl.length)
 
+    try {
+      fs.unlinkSync(path);
+      //file removed
+    } catch (err) { }
+  }
   const deleted = await Product.destroy({ where: { id: productId } });
 
   if (deleted) {

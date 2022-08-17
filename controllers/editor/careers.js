@@ -58,12 +58,14 @@ const editCareerById = async (req, res) => {
     });
   } else {
     //to delete the previously existing image, if exists
-    const path = "public/" + career.imageUrl.slice(process.env.BASE_URL.length, career.imageUrl.length)
-    if (req.file) {
-      try {
-        fs.unlinkSync(path);
-        //file removed
-      } catch (err) { }
+    if (career.imageUrl !== null) {
+      const path = "public/" + career.imageUrl.slice(process.env.BASE_URL.length, career.imageUrl.length)
+      if (req.file) {
+        try {
+          fs.unlinkSync(path);
+          //file removed
+        } catch (err) { }
+      }
     }
 
     //updating the database
@@ -100,14 +102,15 @@ const deleteCareerById = async (req, res) => {
       message: "Oops! we didn't find the career that you are looking for.",
     });
 
-  const path = "public/" + career.imageUrl.slice(process.env.BASE_URL.length, career.imageUrl.length)
+  if (career.imageUrl !== null) {
+    const path = "public/" + career.imageUrl.slice(process.env.BASE_URL.length, career.imageUrl.length)
 
-  //to delete the previously existing image, if exists
-  try {
-    fs.unlinkSync(path);
-    //file removed
-  } catch (err) { }
-
+    //to delete the previously existing image, if exists
+    try {
+      fs.unlinkSync(path);
+      //file removed
+    } catch (err) { }
+  }
   const deleted = await Career.destroy({ where: { id: careerId } });
 
   if (deleted) {

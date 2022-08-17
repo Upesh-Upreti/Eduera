@@ -30,14 +30,15 @@ const deleteEnquiryById = async (req, res) => {
   if (!enquiry)
     return res.status(404).json({ "message": "No such enquiry found." })
 
-  const path = "public/" + enquiry.imageUrl.slice(process.env.BASE_URL.length, enquiry.imageUrl.length)
+  if (enquiry.imageUrl !== null) {
+    const path = "public/" + enquiry.imageUrl.slice(process.env.BASE_URL.length, enquiry.imageUrl.length)
 
-  //to delete the previously existing image, if exists
-  try {
-    fs.unlinkSync(path);
-    //file removed
-  } catch (err) { console.log("Deletion error" + err); }
-
+    //to delete the previously existing image, if exists
+    try {
+      fs.unlinkSync(path);
+      //file removed
+    } catch (err) { console.log("Deletion error" + err); }
+  }
   const deleted = await Enquiry.destroy({ where: { id: enquiryId } });
 
   if (deleted) {

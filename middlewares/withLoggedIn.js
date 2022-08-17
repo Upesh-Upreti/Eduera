@@ -1,7 +1,7 @@
 const { verify } = require("jsonwebtoken");
 
 const withLoggedIn = async (req, res, next) => {
-  let token = req.cookies.token;
+  let token = req.headers['token'];
 
   if (!token)
     return res

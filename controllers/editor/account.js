@@ -78,15 +78,17 @@ const editAccountDetails = async (req, res) => {
       .json({ message: "Oops! no such user found with that email address" });
 
   //to delete the previously existing image, if exists
-  if (req.file) {
-    const path = "public/" + findAccount.imageUrl.slice(process.env.BASE_URL.length, findAccount.imageUrl.length)
+  if (findAccount.imageUrl !== null) {
+    if (req.file) {
+      const path = "public/" + findAccount.imageUrl.slice(process.env.BASE_URL.length, findAccount.imageUrl.length)
 
-    console.log("Deleting the previously existing image at " + path);
+      console.log("Deleting the previously existing image at " + path);
 
-    try {
-      fs.unlinkSync(path);
-      //file removed
-    } catch (err) { }
+      try {
+        fs.unlinkSync(path);
+        //file removed
+      } catch (err) { }
+    }
   }
 
   //updating the database
